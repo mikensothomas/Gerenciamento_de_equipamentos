@@ -93,3 +93,37 @@ def gerarDataAtual():
 @app.get("/relogio/hora")
 def gerarDataAtual():
     return datetime.now().time().strftime("%H:%M")
+
+@app.get("/relogio/ano")
+def getYear():
+    return date.today().strftime("%Y")
+
+@app.get("/relogio/mes")
+def getMonth():
+    return date.today().strftime("%m")
+
+@app.get("/listas/vogais")
+def getVogais():
+    return ['A', 'E', 'I', 'O', 'U']
+
+@app.get("/curiosidades/arco-iris")
+def getCuriosidades():
+    return ['Vermelho', 'Laranja', 'Amarelo', 'Verde', 'Azul', 'Anil', 'Violeta']
+
+@app.get("/texto/maiusculas")
+def getTextUpCase():
+    text = 'programação'
+    return text.upper()
+
+@app.get("/listas/dias-semana")
+def getListaDaSemana():
+    return ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sabado', 'Domingo']
+
+@app.get("/texto/tamanho")
+def getTamanho():
+    frase = 'Desenvolvimento de APIs'
+    return len(frase)
+
+@app.get("/listas/alfabeto")
+def pegarAlfabeto():
+    return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']

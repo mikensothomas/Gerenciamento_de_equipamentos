@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import random
-from datetime import datetime, date
+from datetime import datetime, time, date
 
 app = FastAPI(
     title="My FastAPI Application",
@@ -90,3 +90,6 @@ def gerarTrueFalse():
 def gerarDataAtual():
     return date.today().strftime("%d/%m/%Y")
 
+@app.get("/relogio/hora")
+def gerarDataAtual():
+    return datetime.now().time().strftime("%H:%M")

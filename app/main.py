@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from routes import alunoRoute
 import random
 from datetime import datetime, time, date
 
@@ -7,6 +8,8 @@ app = FastAPI(
     description="This is a sample FastAPI application with a custom title and description.",
     version="1.0.0",
 )
+
+app.include_router(alunoRoute.alunoRoutes)
 
 @app.get("/")
 def read_root():
@@ -124,6 +127,12 @@ def getTamanho():
     frase = 'Desenvolvimento de APIs'
     return len(frase)
 
+# LISTA 2
+
 @app.get("/listas/alfabeto")
 def pegarAlfabeto():
     return ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
+@app.get("/api/geometria/retangulo/{base}/{altura}")
+def fazerSoma(base: float, altura: float):
+    return base * altura

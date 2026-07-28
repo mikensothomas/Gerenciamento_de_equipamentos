@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from routes import alunoRoute
+from routes import alunoRoute, cardapioRoutas
 import random
-from datetime import datetime, time, date
+from datetime import datetime, date
 
 app = FastAPI(
     title="My FastAPI Application",
@@ -10,6 +10,7 @@ app = FastAPI(
 )
 
 app.include_router(alunoRoute.alunoRoutes)
+app.include_router(cardapioRoutas.itemCardapio_routes)
 
 @app.get("/")
 def read_root():
@@ -136,3 +137,52 @@ def pegarAlfabeto():
 @app.get("/api/geometria/retangulo/{base}/{altura}")
 def fazerSoma(base: float, altura: float):
     return base * altura
+
+@app.get("/api/listas/somar")
+def somarArray():
+    contador = 0
+    valores = [1, 2, 3, 4, 5]
+
+    for valor in valores:
+        contador += valor
+    return contador
+
+@app.get("/api/escola/media-turma")
+def mediaTurma():
+    contador = 0
+    valores = [7.5, 8.0, 6.5, 9.0]
+
+    for valor in valores:
+        contador += valor
+    return contador / 4
+
+@app.get("/api/matematica/tabuada/{numero}/{limite}")
+def tabuada(numero: int, limite: int):
+    resultado = [numero * i for i in range(1, limite + 1)]
+
+    return (f"Tabuada: {resultado}")
+
+@app.get("/api/listas/maior-valor")
+def maiorNumero():
+    maior = 0
+    valores = [45, 12, 99, 3, 88]
+
+    for valor in valores:
+        if maior < valor:
+            maior += valor
+            maior = valor
+    return maior
+
+@app.get("/api/social/saudacoes")
+def comprimentar():
+    nomes = ["Ana", "Bruno", "Carlos"]
+
+    mensagem = [f"Olá, {nome}" for nome in nomes]
+
+    return mensagem
+
+@app.get("/api/listas/inverter")
+def inverte():
+    valores = [10, 20, 30, 40]
+    invertido = valores[::-1]
+    return invertido

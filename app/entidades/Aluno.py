@@ -1,7 +1,13 @@
+from dataclasses import dataclass
+
+@dataclass
 class Aluno:
-    def __init__(self):
-        self.id
-        self.nome
-        self.numeroMatricula
-        self.curso
-        self.email
+    id: int
+    nome: str
+    numero_matricula: str
+    curso: str
+    email: str
+
+@property
+def dominio_email(self):
+    return str.split(self.email, "@")[1]

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from routes import alunoRoute, cardapioRoutas
 import random
 from datetime import datetime, date
+from entidades.Agenda import Agendar
 
 app = FastAPI(
     title="My FastAPI Application",
@@ -186,3 +187,7 @@ def inverte():
     valores = [10, 20, 30, 40]
     invertido = valores[::-1]
     return invertido
+
+@app.post("/agenda")
+def agenda(contato: Agendar):
+    return {"Contato": contato}

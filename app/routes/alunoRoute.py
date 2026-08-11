@@ -22,5 +22,3 @@ def insertAluno(parametro: Aluno):
         )
 
     return
-    # id = parametro.get("id")
-    # database.insert(id, parametro)

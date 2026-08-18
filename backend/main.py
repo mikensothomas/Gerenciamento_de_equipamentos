@@ -4,11 +4,17 @@ import random
 from datetime import datetime, date
 from entidades.Agenda import Agendar
 
+from config.Config import Settings
+
 app = FastAPI(
     title="My FastAPI Application",
     description="This is a sample FastAPI application with a custom title and description.",
     version="1.0.0",
 )
+
+@app.get("/config")
+def consfig():
+    return Settings
 
 app.include_router(alunoRoute.alunoRoutes)
 app.include_router(cardapioRoutas.itemCardapio_routes)

@@ -4,7 +4,7 @@ from entidades.Aluno import Aluno
 from controllers import alunosControllers
 
 alunoRoutes = APIRouter()
-database = db.Database()
+# database = db.Database()
 
 @alunoRoutes.get("/alunos")
 def getAlunoData():

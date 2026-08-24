@@ -1,28 +1,26 @@
-from sshtunnel import SSHTunnelForwarder
-from config.Config import Settings
 from sqlmodel import create_engine, Session
+from dotenv import load_dotenv
+import os
+from sqlalchemy import text
 
 class Database:
     def __init__(self):
-        self._engine = None
-        self._tunel = None
+        load_dotenv()
+        self.database_url = os.getenv("DATABASE_URL")
+        self.engine = None
 
-    def starTunnel(self):
-        self._tunel = SSHTunnelForwarder(
-            (Settings.ssh_host, Settings.ssh_port),
-            ssh_username=Settings.ssh_user,
-            ssh_password=Settings.ssh_password,
-            remote_bind_address=(Settings.db_host, Settings.db_port)
-        )
-        self._tunel.start()
+    def connect(self):
+        try:
+            self.engine = create_engine(self.database_url, echo=True)
+            with Session(self.engine) as session:
+                session.exec(text("SELECT 1"))
+                print("✅ Conexão feita com sucesso!")
+            return True
+        except Exception as e:
+            print("❌ Falha na conexão:", e)
+            return False
 
-        local_port = self._tunel.local_bind_port
-        url = f"mysql+pymysql://{Settings.db_user}:{Settings.db_password}@127.0.0.1:{local_port}/{Settings.db_name}"
-        
-        self._engine = create_engine(url, echo=True)
-
-    def get_db(self):
-        if not self._engine:
-            raise RuntimeError("Engine não foi inicializada!")
-        with Session(self._engine) as s:
-            yield s
+    def get_session(self):
+        if not self.engine:
+            self.connect()
+        return Session(self.engine)

@@ -1,4 +1,4 @@
-from entidades.categoria_model import CategoriaEquipamento
+from entidades.models.categoria_model import CategoriaEquipamento
 from sqlmodel import Session
 
 def inserirCategoria(categoria: CategoriaEquipamento, db: Session):

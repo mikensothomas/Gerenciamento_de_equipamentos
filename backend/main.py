@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from DB.db import Database
-from routes import categoria_routes
+from routes import categoria_routes, usuario_routes
 
 app = FastAPI(
     title="My FastAPI Application",
@@ -23,3 +23,4 @@ def check_db():
         return {"status": "❌ Falha na conexão", "error": str(e)}
 
 app.include_router(categoria_routes.categoriaEquipamentoRouter)
+app.include_router(usuario_routes.usaurioRoutes)

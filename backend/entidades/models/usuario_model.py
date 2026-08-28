@@ -9,7 +9,7 @@ class Usuarios(SQLModel, table = True):
     cpf: str = Field(max_length=11, unique=True, nullable=True)
     nome: str = Field(max_length=100, nullable=True)
     email: str = Field(max_length=50, nullable=True)
-    senha: str = Field(max_length=50, nullable=True)
+    senha: str = Field(max_length=255, nullable=True)
     status_usuario: StatusUsuarios = Field(
         default=StatusUsuarios.ATIVO,
         sa_column=Column(

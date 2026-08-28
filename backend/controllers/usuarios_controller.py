@@ -1,6 +1,7 @@
 from entidades.models.usuario_model import Usuarios
 from sqlmodel import Session, select
 from fastapi import HTTPException
+from services.password import hash_password
 
 def inserirUsuarios(usuario: Usuarios, db = Session):
     user_existente_por_cpf = db.exec(
@@ -26,10 +27,14 @@ def inserirUsuarios(usuario: Usuarios, db = Session):
             status_code=400,
             detail="Email duplicado"
         )
+
+    usuario.senha = hash_password(usuario.senha)
     
     inserir_usuarios = Usuarios.model_validate(usuario)
     db.add(inserir_usuarios)
     db.commit()
     db.refresh(inserir_usuarios)
-    return inserir_usuarios
+    return {
+        "message": "Cadastro feito com sucesso!",
+    }
     

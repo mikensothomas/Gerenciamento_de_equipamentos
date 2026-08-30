@@ -85,7 +85,6 @@ def validar_token(
         return email
 
     except jwt.ExpiredSignatureError:
-        # Remove token expirado da memória
         tokens_ativos.pop(token, None)
 
         raise HTTPException(

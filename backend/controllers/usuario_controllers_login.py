@@ -1,7 +1,9 @@
 from entidades.models.usuario_model import Usuarios
 from sqlmodel import Session, select
 from fastapi import HTTPException
-from services.password import verificar_password
+from services.password_hash import verificar_password
+from datetime import timedelta
+from auth.auth_login import ( criar_token, ACCESS_TOKEN_EXPIRE_MINUTES )
 
 
 def loginUsuario(email: str, senha: str, db: Session):
@@ -29,6 +31,14 @@ def loginUsuario(email: str, senha: str, db: Session):
             detail="E-mail ou senha incorretos"
         )
 
+    token = criar_token(
+        email=usuario.email,
+        expires_delta=timedelta(
+            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        )
+    )
+    
     return {
-        "message": "Login feito com sucesso!",
+        "access_token": token,
+        "token_type": "bearer"
     }

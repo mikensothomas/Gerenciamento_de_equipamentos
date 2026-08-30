@@ -1,7 +1,7 @@
 from entidades.models.usuario_model import Usuarios
 from sqlmodel import Session, select
 from fastapi import HTTPException
-from services.password import hash_password
+from services.password_hash import hash_password
 
 def inserirUsuarios(usuario: Usuarios, db = Session):
     user_existente_por_cpf = db.exec(

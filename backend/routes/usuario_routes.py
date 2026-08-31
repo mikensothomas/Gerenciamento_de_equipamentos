@@ -25,14 +25,8 @@ def inserir_usuarios(
     return inserirUsuarios(user, db)
 
 
-@usaurioRoutes.post(
-    "/user_login",
-    response_model=Token
-)
-def logar_usuarios(
-    user: Usuarios,
-    db: Session = Depends(database.get_session)
-):
+@usaurioRoutes.post("/user_login", response_model=Token)
+def logar_usuarios(user: Usuarios, db: Session = Depends(database.get_session) ):
     return loginUsuario(
         user.email,
         user.senha,

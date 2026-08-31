@@ -23,7 +23,6 @@ if not SECRET_KEY:
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user_login")
 
 
-# Tokens ativos em memória
 tokens_ativos: Dict[str, str] = {}
 
 

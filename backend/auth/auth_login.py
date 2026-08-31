@@ -61,7 +61,6 @@ def validar_token(
     token: str = Depends(oauth2_scheme)
 ):
     try:
-        # Primeiro verifica se o token está ativo
         if token not in tokens_ativos:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

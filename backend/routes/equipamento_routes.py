@@ -9,14 +9,8 @@ equipamento_router = APIRouter()
 
 database = Database()
 
-@equipamento_router.post(
-    "/salvaEquipamento",
-    response_model=EquipamentoResponse
-)
-def cadastrar_equipamento(
-    equipamento: Equipamento,
-    db: Session = Depends(database.get_session)
-):
+@equipamento_router.post("/salvaEquipamento",response_model=EquipamentoResponse)
+def cadastrar_equipamento(equipamento: Equipamento, db: Session = Depends(database.get_session)):
     try:
         return cadastrarEquipamento(equipamento, db)
 

@@ -7,21 +7,14 @@ from controllers.usuario_controllers_login import loginUsuario
 from dependencia.depenndencia import database
 from entidades.models.usuario_model import Usuarios
 
-from auth.auth_login import (
-    Token,
-    validar_token,
-    logout_usuario
-)
+from auth.auth_login import (Token, validar_token, logout_usuario)
 
 
 usaurioRoutes = APIRouter()
 
 
 @usaurioRoutes.post("/user_register")
-def inserir_usuarios(
-    user: Usuarios,
-    db: Session = Depends(database.get_session)
-):
+def inserir_usuarios(user: Usuarios,db: Session = Depends(database.get_session)):
     return inserirUsuarios(user, db)
 
 
@@ -35,16 +28,12 @@ def logar_usuarios(user: Usuarios, db: Session = Depends(database.get_session) )
 
 
 @usaurioRoutes.get("/protegido")
-def rota_protegida(
-    usuario: str = Depends(validar_token)
-):
+def rota_protegida(usuario: str = Depends(validar_token)):
     return {
         "message": f"Bem-vindo, {usuario}!"
     }
 
 
 @usaurioRoutes.post("/logout")
-def logout(
-    resultado = Depends(logout_usuario)
-):
+def logout(resultado = Depends(logout_usuario)):
     return resultado

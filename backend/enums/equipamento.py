@@ -4,4 +4,4 @@ class EquipamentoStatus(str, Enum):
     DISPONIVEL = "Disponivel"
     INDISPONIVEL = "Indisponivel"
     MANUTENCAO = "Manutencao"
-    RESERVADO = "Resarvado"
+    RESERVADO = "Reservado"

@@ -13,15 +13,13 @@ class EquipamentoBase(SQLModel):
     modelo: str = Field(min_length=3, max_length=50)
     descricao: str = Field(max_length=255)
 
-    status_equipamento: EquipamentoStatus = Field(
-    default=EquipamentoStatus.DISPONIVEL,
-    sa_column=Column(
-        SQLEnum(
-            EquipamentoStatus,
-            values_callable=lambda enum: [item.value for item in enum]
+    status_equipamento: EquipamentoStatus = Field(default=EquipamentoStatus.DISPONIVEL, sa_column=Column(
+            SQLEnum(
+                EquipamentoStatus,
+                values_callable=lambda enum: [item.value for item in enum]
+            )
         )
     )
-)
 
     equipamento_categoria_id: int = Field(
         foreign_key="Categoria_equipamento.categoria_id"

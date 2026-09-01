@@ -1,5 +1,7 @@
 from sqlmodel import SQLModel, Field, Relationship
-from equipqmento_model import Equipamento
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from entidades.models.equipamento_model import Equipamento
 
 class CategoriaEquipamento(SQLModel, table = True):
     __tablename__="Categoria_equipamento"

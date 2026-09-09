@@ -50,7 +50,6 @@ def criar_token(
         algorithm=ALGORITHM
     )
 
-    # Salva o token em memória
     tokens_ativos[token] = email
 
     return token

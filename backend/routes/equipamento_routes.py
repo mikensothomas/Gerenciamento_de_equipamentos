@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from dependencia.depenndencia import Database
 from entidades.models.equipamento_model import Equipamento

@@ -22,12 +22,12 @@ class EquipamentoBase(SQLModel):
     )
 
     equipamento_categoria_id: int = Field(
-        foreign_key="Categoria_equipamento.categoria_id"
+        foreign_key="categoria_equipamento.categoria_id"
     )
 
 
 class Equipamento(EquipamentoBase, table=True):
-    __tablename__ = "Equipamento"
+    __tablename__ = "equipamento"
 
     equipamento_id: int | None = Field(
         default=None,

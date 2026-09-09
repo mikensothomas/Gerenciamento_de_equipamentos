@@ -4,7 +4,7 @@ from enums.status_usuarios import StatusUsuarios
 from enums.perfil_usuarios import PerfilUsuarios
 
 class Usuarios(SQLModel, table = True):
-    __tablename__="Usuarios"
+    __tablename__="usuarios"
     id_usuario: int | None = Field(default=None, primary_key=True)
     cpf: str = Field(max_length=11, unique=True, nullable=True)
     nome: str = Field(max_length=100, nullable=True)

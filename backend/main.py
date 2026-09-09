@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from DB.db import Database
-from routes import categoria_routes, usuario_routes, equipamento_routes
+from routes import categoria_routes, usuario_routes, equipamento_routes, solicitacao_routas
+# from entidades.models.equipamento_model import Equipamento
+# from entidades.models.usuario_model import Usuarios
+# from entidades.models.solicitacao_emprestimo_model import SolicitacaoEmprestimo
 
 app = FastAPI(
     title="My FastAPI Application",
@@ -25,3 +28,4 @@ def check_db():
 app.include_router(categoria_routes.categoriaEquipamentoRouter)
 app.include_router(usuario_routes.usaurioRoutes)
 app.include_router(equipamento_routes.equipamento_router)
+app.include_router(solicitacao_routas.solicitacao_router)

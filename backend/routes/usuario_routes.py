@@ -9,7 +9,6 @@ from entidades.models.usuario_model import Usuarios
 
 from auth.auth_login import (Token, validar_token, logout_usuario)
 
-
 usaurioRoutes = APIRouter()
 
 

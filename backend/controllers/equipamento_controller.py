@@ -2,6 +2,9 @@ from sqlmodel import Session
 from sqlalchemy.exc import OperationalError, IntegrityError
 from entidades.models.equipamento_model import Equipamento
 from entidades.models.categoria_model import CategoriaEquipamento
+from entidades.models.equipamento_model import Equipamento
+from sqlmodel import Session, select
+from fastapi import HTTPException
 
 
 def cadastrarEquipamento(equipamento_data: Equipamento, db: Session):
@@ -20,3 +23,29 @@ def cadastrarEquipamento(equipamento_data: Equipamento, db: Session):
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError as e:
         raise ValueError("Verifique os dados") from e
+    
+
+def deletarEquipamento(id: int, db: Session):
+    equipamento = db.exec(
+        select(Equipamento).where(
+            Equipamento.equipamento_id == id
+        )
+    ).first()
+
+    if not equipamento:
+        raise HTTPException(
+            status_code=404,
+            detail="Equipamento não encontrado"
+        )
+
+    db.delete(equipamento)
+    db.commit()
+
+    return {
+        "message": "Equipamento deletado com sucesso!"
+    }
+
+def listarEquipamento(db: Session):
+    equipamentos = db.exec(select(Equipamento)).all()
+
+    return equipamentos

@@ -1,12 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlmodel import Session
-
 from controllers.usuarios_controller import inserirUsuarios
 from controllers.usuario_controllers_login import loginUsuario
-
 from dependencia.depenndencia import database
 from entidades.models.usuario_model import Usuarios
-
 from auth.auth_login import (Token, validar_token, logout_usuario)
 
 usaurioRoutes = APIRouter()

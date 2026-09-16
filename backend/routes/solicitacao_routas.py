@@ -1,39 +1,3 @@
-# from fastapi import APIRouter, Depends, HTTPException
-# from sqlmodel import Session
-# from dependencia.depenndencia import Database
-# from controllers.solicitacao_emprestimo_controller import cadastrarSolicitacao
-# from entidades.models.solicitacao_emprestimo_model import SolicitacaoEmprestimo
-# from auth.auth_login import validar_token
-# from fastapi import APIRouter, Depends, HTTPException
-# from sqlmodel import Session, select
-# from entidades.models.usuario_model import Usuarios
-
-# solicitacao_router = APIRouter()
-
-# database = Database()
-
-# @solicitacao_router.post("/solicitar_equipamento", response_model=SolicitacaoEmprestimo)
-# def solicitar_equipamentos(solicitacao: SolicitacaoEmprestimo, email_usuario: str = Depends(validar_token), db: Session = Depends(database.get_session)):
-#     try:
-#         usuario = db.exec(
-#         select(Usuarios).where(
-#             Usuarios.email == email_usuario
-#         )
-#     ).first()
-#         return cadastrarSolicitacao(solicitacao, db)
-
-#     except ValueError as e:
-#         raise HTTPException(
-#             status_code=400,
-#             detail=str(e)
-#         )
-
-#     except RuntimeError as e:
-#         raise HTTPException(
-#             status_code=500,
-#             detail=str(e)
-#         )
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 

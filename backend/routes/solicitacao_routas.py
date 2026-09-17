@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlmodel import Session, select
 
 from dependencia.depenndencia import Database
-from controllers.solicitacao_emprestimo_controller import cadastrarSolicitacao
+from controllers.solicitacao_emprestimo_controller import cadastrarSolicitacao, deletarSolicitacao, listarSolicitacao, editarSolicitacao
 from entidades.models.solicitacao_emprestimo_model import SolicitacaoEmprestimo
 from entidades.models.usuario_model import Usuarios
 from auth.auth_login import validar_token
@@ -50,3 +50,38 @@ def solicitar_equipamentos(
             status_code=500,
             detail=str(e)
         )
+
+@solicitacao_router.delete("/deletar_solicitacao/{id}")
+def deletarCategorias(id: int, db: Session = Depends(database.get_session)):
+
+    try:
+        deletarSolicitacao(id, db)
+
+        return {"Deletar com sucesso"}
+    
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@solicitacao_router.put("/editar_solicitacao/{id}")
+def deletarCategorias(id: int, db: Session = Depends(database.get_session)):
+
+    try:
+        return editarSolicitacao(id ,db)
+    
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@solicitacao_router.get("/listar_solicitacao/{id}")
+def deletarCategorias(db: Session = Depends(database.get_session)):
+
+    try:
+        return listarSolicitacao(db)
+    
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+    except RuntimeError as e:
+        raise HTTPException(status_code=500, detail=str(e))

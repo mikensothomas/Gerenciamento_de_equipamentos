@@ -4,50 +4,56 @@ from fastapi import HTTPException
 from services.password_hash import verificar_password
 from datetime import timedelta
 from auth.auth_login import ( criar_token, ACCESS_TOKEN_EXPIRE_MINUTES )
+from sqlalchemy.exc import OperationalError, IntegrityError
 
 
 def loginUsuario(email: str, senha: str, db: Session):
 
-    usuario = db.exec(
-        select(Usuarios).where(
-            Usuarios.email == email
-        )
-    ).first()
+    try:
+        usuario = db.exec(
+            select(Usuarios).where(
+                Usuarios.email == email
+            )
+        ).first()
 
-    if not usuario:
-        raise HTTPException(
-            status_code=401,
-            detail="E-mail ou senha incorretos"
-        )
+        if not usuario:
+            raise HTTPException(
+                status_code=401,
+                detail="E-mail ou senha incorretos"
+            )
 
-    senha_valida = verificar_password(
-        senha,
-        usuario.senha
-    )
-
-    if not senha_valida:
-        raise HTTPException(
-            status_code=401,
-            detail="E-mail ou senha incorretos"
+        senha_valida = verificar_password(
+            senha,
+            usuario.senha
         )
 
-    token = criar_token(
-        email=usuario.email,
-        expires_delta=timedelta(
-            minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+        if not senha_valida:
+            raise HTTPException(
+                status_code=401,
+                detail="E-mail ou senha incorretos"
+            )
+
+        token = criar_token(
+            email=usuario.email,
+            expires_delta=timedelta(
+                minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+            )
         )
-    )
-    
-    return {
-        "access_token": token,
-        "token_type": "bearer",
-        "usuario": {
-            "id": usuario.id_usuario,
-            "nome": usuario.nome,
-            "email": usuario.email,
-            "cpf": usuario.cpf,
-            "perfil": usuario.perfil,
-            "status": usuario.status_usuario,
-            "data_cadastro": usuario.data_cadastro
+        
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "usuario": {
+                "id": usuario.id_usuario,
+                "nome": usuario.nome,
+                "email": usuario.email,
+                "cpf": usuario.cpf,
+                "perfil": usuario.perfil,
+                "status": usuario.status_usuario,
+                "data_cadastro": usuario.data_cadastro
+            }
         }
-    }
+    except OperationalError as e:
+        raise RuntimeError("Falha na conexão com o banco de dados") from e
+    except IntegrityError as e:
+        raise ValueError("Verifique os dados") from e

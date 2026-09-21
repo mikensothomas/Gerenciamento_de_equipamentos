@@ -65,10 +65,10 @@ def deletarCategorias(id: int, db: Session = Depends(database.get_session)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.put("/editar_solicitacao/{id}")
-def deletarCategorias(id: int, db: Session = Depends(database.get_session)):
+def deletarCategorias(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session)):
 
     try:
-        return editarSolicitacao(id ,db)
+        return editarSolicitacao(id, solicitacao, db)
     
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

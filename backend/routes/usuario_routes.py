@@ -48,10 +48,10 @@ def logout(resultado = Depends(logout_usuario)):
     return resultado
 
 @usaurioRoutes.put("/editar_usuario/{id}")
-def editarUsuarios(id: int, db: Session = Depends(database.get_session)):
+def editarUsuarios(id: int, usuario: Usuarios, db: Session = Depends(database.get_session)):
 
     try:
-        return editarUsuario(id ,db)
+        return editarUsuario(id, usuario ,db)
     
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

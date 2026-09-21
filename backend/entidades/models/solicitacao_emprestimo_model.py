@@ -13,6 +13,7 @@ class SolicitacaoEmprestimo(SQLModel, table = True):
         )
     )
     data_solicitacao : datetime = Field(default_factory=datetime.now)
+    data_aprovacao: datetime | None = Field(default=None)
     tempo_estimado_devolucao: datetime | None = Field(
         default=None,
         sa_column=Column(

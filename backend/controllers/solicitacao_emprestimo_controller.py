@@ -74,8 +74,9 @@ def editarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session)
             raise HTTPException("Soliciação informada não existe")
 
         solicitacao.status_solicitacao = solicitacoes.status_solicitacao
-        solicitacao.tempo_estimado_devolucao = solicitacoes.tempo_estimado_devolucao
+        solicitacao.data_aprovacao = solicitacoes.data_aprovacao
         solicitacao.equipamento_id = solicitacoes.equipamento_id
+        solicitacao.id_aprovador = solicitacoes.id_aprovador
 
         db.add(solicitacao)
         db.commit()

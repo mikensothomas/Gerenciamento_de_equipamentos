@@ -70,6 +70,7 @@ def editarCategoria(id: int, categorias: CategoriaEquipamento, db: Session):
             raise HTTPException("Categoria não encontrada")
 
         categoria.categoria_name = categorias.categoria_name
+        
         db.add(categoria)
         db.commit()
         db.refresh(categoria)

@@ -16,6 +16,12 @@ def loginUsuario(email: str, senha: str, db: Session):
             )
         ).first()
 
+        if usuario.status_usuario != "Ativo":
+            raise HTTPException(
+                status_code=401,
+                detail="Usuário bloqueado ou inativo"
+            ) 
+
         if not usuario:
             raise HTTPException(
                 status_code=401,

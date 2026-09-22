@@ -95,7 +95,9 @@ def editarUsuario(id: int, usuarios: Usuarios, db: Session):
         db.commit()
         db.refresh(usuario)
 
-        return usuario
+        return {
+            f"O usuário {usuario.nome} editado com sucesso"
+        }
 
     except OperationalError as e:
         raise RuntimeError("Falha na conexão com o banco de dados") from e

@@ -21,10 +21,8 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
         return solicitacao_data
 
     except OperationalError as e:
-        db.rollback()
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError as e:
-        db.rollback()
         raise ValueError("Erro de integridade nos dados informados") from e
 
 
@@ -46,7 +44,6 @@ def deletarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session
         }
 
     except OperationalError as e:
-        db.rollback()
         raise RuntimeError("Falha na conexão com o banco de dados") from e
 
 
@@ -61,7 +58,6 @@ def listarSolicitacao(db: Session):
         return solicitacao
     
     except OperationalError as e:
-        db.rollback()
         raise RuntimeError("Falha na conexão com o banco de dados") from e
 
     
@@ -85,8 +81,30 @@ def editarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session)
         return solicitacao
         
     except OperationalError as e:
-        db.rollback()
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError as e:
-        db.rollback()
         raise ValueError("Erro de integridade nos dados informados") from e
+
+def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session):
+
+    try:
+        solicitacao = db.get(SolicitacaoEmprestimo, id)
+        
+        if not solicitacao:
+            raise HTTPException("Solicitação não encontrado")
+        
+        solicitacao.status_solicitacao = solicitacoes.status_solicitacao
+    
+        db.add(solicitacao)
+        db.commit()
+        db.refresh(solicitacao)
+    
+        return {
+            f"Solicitação ID {solicitacao.id_solicitacao_emprestimo} alterada com sucesso"
+        }
+    
+    except OperationalError as e:
+        raise RuntimeError("Falha na conexão com o banco de dados") from e
+    except IntegrityError as e:
+        raise ValueError("Erro de integridade nos dados informados") from e
+    

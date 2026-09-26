@@ -12,8 +12,8 @@ solicitacao_router = APIRouter()
 database = Database()
 
 
-@solicitacao_router.post("/solicitar_equipamento", response_model=SolicitacaoEmprestimo)
-def solicitar_equipamentos(solicitacao: SolicitacaoEmprestimo, email_usuario: str = Depends(validar_token), db: Session = Depends(database.get_session)):
+@solicitacao_router.post("/solicitar_equipamento/{id}", response_model=SolicitacaoEmprestimo)
+def solicitar_equipamentos(id: int, email_usuario: str = Depends(validar_token), db: Session = Depends(database.get_session)):
 
     usuario = db.exec(
         select(Usuarios).where(
@@ -27,7 +27,7 @@ def solicitar_equipamentos(solicitacao: SolicitacaoEmprestimo, email_usuario: st
             detail="Usuário não encontrado"
         )
 
-    solicitacao.usuario_id = usuario.id_usuario
+    solicitacao = SolicitacaoEmprestimo(usuario_id = usuario.id_usuario, equipamento_id = id)
 
     try:
         return cadastrarSolicitacao(solicitacao, db)

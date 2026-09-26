@@ -12,6 +12,7 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
             raise ValueError("Usuário não encontrado")
 
         equipamento = db.get(Equipamento, solicitacao_data.equipamento_id)
+
         if not equipamento:
             raise ValueError("Equipamento não encontrado")
 

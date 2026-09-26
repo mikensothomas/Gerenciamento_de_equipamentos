@@ -84,9 +84,9 @@ def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, email_user: 
     try:
 
         aprovador = db.exec(
-                select(Usuarios).where(
-                    Usuarios.email == email_user
-                )
+            select(Usuarios).where(
+                Usuarios.email == email_user
+            )
         ).first()
 
         if not aprovador:
@@ -101,7 +101,7 @@ def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, email_user: 
                 detail="Esse usuário não pode aprovar nem reprovar solicitação"
             )
         
-        return aprovarSolicitacao(id, solicitacao, db)
+        return aprovarSolicitacao(id, solicitacao, aprovador, db)
         
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

@@ -90,7 +90,7 @@ def editarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session)
     except IntegrityError as e:
         raise ValueError("Erro de integridade nos dados informados") from e
 
-def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session):
+def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, aprovador_solicitacao: Usuarios, db: Session):
 
     try:
         solicitacao = db.get(SolicitacaoEmprestimo, id)
@@ -99,6 +99,7 @@ def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session
             raise HTTPException("Solicitação não encontrado")
         
         solicitacao.status_solicitacao = solicitacoes.status_solicitacao
+        solicitacao.id_aprovador = aprovador_solicitacao.id_usuario
     
         db.add(solicitacao)
         db.commit()

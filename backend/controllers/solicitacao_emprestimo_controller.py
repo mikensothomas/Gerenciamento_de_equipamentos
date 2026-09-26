@@ -20,8 +20,13 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
         db.refresh(solicitacao_data)
         return solicitacao_data
 
-    except OperationalError as e:
-        raise RuntimeError("Falha na conexão com o banco de dados") from e
+    except Exception as e:
+        db.rollback()
+        print("ERRO REAL:", repr(e))
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
     except IntegrityError as e:
         raise ValueError("Erro de integridade nos dados informados") from e
 

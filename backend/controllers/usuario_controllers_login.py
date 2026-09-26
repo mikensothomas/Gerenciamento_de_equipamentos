@@ -16,17 +16,17 @@ def loginUsuario(email: str, senha: str, db: Session):
             )
         ).first()
 
-        if usuario.status_usuario != "Ativo":
-            raise HTTPException(
-                status_code=401,
-                detail="Usuário bloqueado ou inativo"
-            ) 
-
         if not usuario:
             raise HTTPException(
                 status_code=401,
                 detail="E-mail ou senha incorretos"
             )
+
+        if usuario.status_usuario != "Ativo":
+            raise HTTPException(
+                status_code=401,
+                detail="Usuário bloqueado ou inativo"
+            ) 
 
         senha_valida = verificar_password(
             senha,

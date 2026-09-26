@@ -20,7 +20,7 @@ if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY não configurada no .env")
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user_login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
 tokens_ativos: Dict[str, str] = {}
@@ -29,7 +29,6 @@ tokens_ativos: Dict[str, str] = {}
 class Token(BaseModel):
     access_token: str
     token_type: str
-
 
 def criar_token(
     email: str,
@@ -50,21 +49,12 @@ def criar_token(
         algorithm=ALGORITHM
     )
 
-    tokens_ativos[token] = email
-
     return token
-
 
 def validar_token(
     token: str = Depends(oauth2_scheme)
 ):
     try:
-        if token not in tokens_ativos:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Token inválido ou usuário deslogado"
-            )
-
         payload = jwt.decode(
             token,
             SECRET_KEY,
@@ -82,8 +72,6 @@ def validar_token(
         return email
 
     except jwt.ExpiredSignatureError:
-        tokens_ativos.pop(token, None)
-
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token expirado"

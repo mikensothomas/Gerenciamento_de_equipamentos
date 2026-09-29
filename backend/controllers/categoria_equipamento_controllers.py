@@ -58,7 +58,7 @@ def deletarCategoria(id: int, db: Session):
         db.rollback()
         raise HTTPException(
             status_code=400,
-            detail="Não é possível excluir esta categoria, pois existem equipamento vincurados a ela."
+            detail="Não é possível excluir esta categoria, pois existem equipamentos vincurados a ela."
         )
 
 

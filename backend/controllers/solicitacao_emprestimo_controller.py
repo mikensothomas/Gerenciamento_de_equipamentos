@@ -35,7 +35,7 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
 def deletarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session):
 
     try:
-        solicitacao = db.exec(select(SolicitacaoEmprestimo).where(solicitacoes.equipamento_id == id)).first()
+        solicitacao = db.exec(select(SolicitacaoEmprestimo).where(solicitacoes.id_solicitacao_emprestimo == id)).first()
 
         if not solicitacao:
             raise HTTPException(

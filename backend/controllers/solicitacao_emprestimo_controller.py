@@ -117,12 +117,24 @@ def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, aprovador_s
 
     try:
         solicitacao = db.get(SolicitacaoEmprestimo, id)
+        equipamento = db.get(Equipamento, solicitacoes.equipamento_id)
         
         if not solicitacao:
             raise HTTPException("Solicitação não encontrado")
+
+        if not equipamento:
+            raise HTTPException("Equipamento não encontrado")
         
         solicitacao.status_solicitacao = solicitacoes.status_solicitacao
         solicitacao.id_aprovador = aprovador_solicitacao.id_usuario
+
+        if solicitacao.status_solicitacao == "DEVOLVIDO":
+            equipamento.quantidade += 1
+            
+            if equipamento.quantidade > 0:
+                equipamento.status_equipamento = equipamento.status_equipamento.DISPONIVEL
+
+            db.add(equipamento)
     
         db.add(solicitacao)
         db.commit()

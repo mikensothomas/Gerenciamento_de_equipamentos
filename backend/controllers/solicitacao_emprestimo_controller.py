@@ -69,9 +69,17 @@ def deletarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session
         raise RuntimeError("Falha na conexão com o banco de dados") from e
 
 
-def listarSolicitacao(db: Session):
+def listarSolicitacao(db: Session, usuario: Usuarios):
 
     try:
+
+        if usuario.perfil not in ("Administrador", "Gestor"):
+            solicitacao = db.exec(
+                select(SolicitacaoEmprestimo).where(
+                    SolicitacaoEmprestimo.usuario_id == usuario.id_usuario
+                )
+            ).all()
+            
         solicitacao = db.exec(select(SolicitacaoEmprestimo)).all()
 
         if not solicitacao:

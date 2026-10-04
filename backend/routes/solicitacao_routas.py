@@ -45,7 +45,7 @@ def solicitar_equipamentos(id: int, email_usuario: str = Depends(validar_token),
         )
 
 @solicitacao_router.delete("/deletar_solicitacao/{id}")
-def deletarCategorias(id: int, db: Session = Depends(database.get_session)):
+def deletarSolicitacao(id: int, db: Session = Depends(database.get_session)):
 
     try:
         deletarSolicitacao(id, db)
@@ -58,7 +58,7 @@ def deletarCategorias(id: int, db: Session = Depends(database.get_session)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.put("/editar_solicitacao/{id}")
-def deletarCategorias(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session)):
+def editarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session)):
 
     try:
         return editarSolicitacao(id, solicitacao, db)
@@ -69,7 +69,7 @@ def deletarCategorias(id: int, solicitacao: SolicitacaoEmprestimo, db: Session =
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.get("/listar_solicitacao/{id}")
-def deletarCategorias(db: Session = Depends(database.get_session)):
+def listarSolicitacao(id: int, db: Session = Depends(database.get_session)):
 
     try:
         return listarSolicitacao(db)
@@ -95,7 +95,7 @@ def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, email_user: 
                 detail="Token não fornecido"
             )
 
-        if aprovador.perfil not in ("Administrador", "Gestor", "Tecnico"):
+        if aprovador.perfil not in ("Administrador", "Gestor"):
             raise HTTPException(
                 status_code=403,
                 detail="Esse usuário não pode aprovar nem reprovar solicitação"

@@ -74,13 +74,11 @@ def listarSolicitacao(db: Session, usuario: Usuarios):
     try:
 
         if usuario.perfil not in ("Administrador", "Gestor"):
-            solicitacao = db.exec(
-                select(SolicitacaoEmprestimo).where(
-                    SolicitacaoEmprestimo.usuario_id == usuario.id_usuario
-                )
-            ).all()
-            
-        solicitacao = db.exec(select(SolicitacaoEmprestimo)).all()
+            statement = select(SolicitacaoEmprestimo).where(SolicitacaoEmprestimo.usuario_id == usuario.id_usuario)
+        else:
+            statement = select(SolicitacaoEmprestimo)
+
+        solicitacao = db.exec(statement).all()
 
         if not solicitacao:
             raise HTTPException("Nenhuma solicitação encontarda")

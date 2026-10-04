@@ -68,11 +68,23 @@ def editarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session =
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@solicitacao_router.get("/listar_solicitacao/{id}")
-def listarSolicitacao(id: int, db: Session = Depends(database.get_session)):
+@solicitacao_router.get("/listar_solicitacao")
+def listar_solicitacoes(db: Session = Depends(database.get_session), usuario_token: str = Depends(validar_token)):
 
     try:
-        return listarSolicitacao(db)
+        usuario = db.exec(
+            select(Usuarios).where(
+                Usuarios.email == usuario_token
+            )
+        ).first()
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuário não encontrado"
+            )
+
+        return listarSolicitacao(db, usuario)
     
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))

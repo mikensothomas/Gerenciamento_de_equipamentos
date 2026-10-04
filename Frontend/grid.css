@@ -1,0 +1,31 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, max(50px, 1fr));
+    grid-template-rows: repeat(3, max(50px, 1fr));
+    height: 50vh;
+    width: 50vw;
+}
+
+.row-9 {
+    grid-column: 3 / 4;
+    grid-row: 3 / 4;
+}
+
+.container-named {
+    display: grid;
+    grid-template-areas:
+        "sidebar navebar"
+        "sidebar info"
+        "sidebar main"
+        "footer footer";
+        height: 100vh;
+        border: 1px solid springgreen;
+}
+
+.footer {
+    grid-area: footer;
+    background-color: #f1f1f1;
+    height: 50px;
+    border-radius: 5px;
+    border: 1px solid springgreen;
+}

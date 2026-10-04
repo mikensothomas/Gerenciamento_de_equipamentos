@@ -16,9 +16,25 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
         if not equipamento:
             raise ValueError("Equipamento não encontrado")
 
+        if equipamento.status_equipamento != equipamento.status_equipamento.DISPONIVEL:
+            raise ValueError("Equipamento não disponível para empréstimo")
+
+        if equipamento.quantidade is None or equipamento.quantidade <= 0:
+            raise ValueError("Equipamento não disponível para empréstimo")
+
         db.add(solicitacao_data)
         db.commit()
         db.refresh(solicitacao_data)
+
+        equipamento.quantidade -= 1
+
+        if equipamento.quantidade == 0:
+            equipamento.status_equipamento = equipamento.status_equipamento.INDISPONIVEL
+
+        db.add(equipamento)
+        db.commit()
+        db.refresh(equipamento)
+
         return solicitacao_data
 
     except Exception as e:

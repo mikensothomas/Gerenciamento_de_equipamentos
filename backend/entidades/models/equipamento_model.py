@@ -22,7 +22,8 @@ class EquipamentoBase(SQLModel):
     )
 
     equipamento_categoria_id: int = Field(
-        foreign_key="categoria_equipamento.categoria_id"
+        foreign_key="categoria_equipamento.categoria_id",
+        nullable=True
     )
 
 
@@ -38,6 +39,11 @@ class Equipamento(EquipamentoBase, table=True):
         back_populates="equipamentos"
     )
 
+    quantidade: int | None = Field(
+        nullable=True,
+        default=1
+    )
+
 
 class EquipamentoResponse(SQLModel):
     equipamento_id: int
@@ -48,3 +54,4 @@ class EquipamentoResponse(SQLModel):
     descricao: str
     status_equipamento: EquipamentoStatus
     equipamento_categoria_id: int
+    quantidade: int

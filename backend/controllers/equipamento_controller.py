@@ -75,6 +75,7 @@ def editarEquipamento(id: int, equipamentosData: Equipamento, db: Session):
         equipamento.descricao = equipamentosData.descricao
         equipamento.status_equipamento = equipamentosData.status_equipamento
         equipamento.equipamento_categoria_id = equipamentosData.equipamento_categoria_id
+        equipamento.quantidade = equipamentosData.quantidade
 
         db.add(equipamento)
         db.commit()

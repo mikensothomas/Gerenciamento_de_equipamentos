@@ -117,18 +117,16 @@ def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, aprovador_s
 
     try:
         solicitacao = db.get(SolicitacaoEmprestimo, id)
-        equipamento = db.get(Equipamento, solicitacoes.equipamento_id)
         
         if not solicitacao:
             raise HTTPException("Solicitação não encontrado")
 
-        if not equipamento:
-            raise HTTPException("Equipamento não encontrado")
+        equipamento = db.get(Equipamento, solicitacao.equipamento_id)
         
         solicitacao.status_solicitacao = solicitacoes.status_solicitacao
         solicitacao.id_aprovador = aprovador_solicitacao.id_usuario
 
-        if solicitacao.status_solicitacao == "DEVOLVIDO":
+        if solicitacao.status_solicitacao == "Devolvido":
             equipamento.quantidade += 1
             
             if equipamento.quantidade > 0:
@@ -148,4 +146,3 @@ def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, aprovador_s
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError as e:
         raise ValueError("Erro de integridade nos dados informados") from e
-    

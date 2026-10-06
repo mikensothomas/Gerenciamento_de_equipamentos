@@ -141,6 +141,7 @@ def loginUsuario(email: str, senha: str, db: Session):
 
         token = criar_token(
             email=usuario.email,
+            role=usuario.perfil,
             expires_delta=timedelta(
                 minutes=ACCESS_TOKEN_EXPIRE_MINUTES
             )
@@ -149,15 +150,6 @@ def loginUsuario(email: str, senha: str, db: Session):
         return {
             "access_token": token,
             "token_type": "bearer",
-            "usuario": {
-                "id": usuario.id_usuario,
-                "nome": usuario.nome,
-                "email": usuario.email,
-                "cpf": usuario.cpf,
-                "perfil": usuario.perfil,
-                "status": usuario.status_usuario,
-                "data_cadastro": usuario.data_cadastro
-            }
         }
     except OperationalError as e:
         raise RuntimeError("Falha na conexão com o banco de dados") from e

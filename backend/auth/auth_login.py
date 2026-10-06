@@ -32,6 +32,7 @@ class Token(BaseModel):
 
 def criar_token(
     email: str,
+    role: str,
     expires_delta: Optional[timedelta] = None
 ):
     expire = datetime.now(timezone.utc) + (
@@ -40,6 +41,7 @@ def criar_token(
 
     payload = {
         "sub": email,
+        "role": role,
         "exp": expire
     }
 

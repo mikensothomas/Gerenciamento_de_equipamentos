@@ -64,6 +64,7 @@ def validar_token(
         )
 
         email = payload.get("sub")
+        role = payload.get("role")
 
         if not email:
             raise HTTPException(
@@ -71,7 +72,7 @@ def validar_token(
                 detail="Token inválido"
             )
 
-        return email
+        return {"email": email, "role": role}
 
     except jwt.ExpiredSignatureError:
         raise HTTPException(
@@ -84,6 +85,17 @@ def validar_token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido"
         )
+
+def admin_gestor_required(
+    usuario: dict = Depends(validar_token)
+):
+    if usuario["role"] not in ["Administrador", "Gestor"]:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso negado, essa rota é restrita a administradores e gestores"
+        )
+
+    return usuario
 
 
 def logout_usuario(

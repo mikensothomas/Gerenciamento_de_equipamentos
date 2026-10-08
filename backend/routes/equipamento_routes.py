@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
+from backend.routes.categoria_routes import admin_gestor_required
 from dependencia.depenndencia import Database
 from entidades.models.equipamento_model import Equipamento
 from controllers.equipamento_controller import cadastrarEquipamento
@@ -10,8 +11,8 @@ equipamento_router = APIRouter()
 
 database = Database()
 
-@equipamento_router.post("/salvaEquipamento",response_model=EquipamentoResponse)
-def cadastrar_equipamento(equipamento: Equipamento, db: Session = Depends(database.get_session)):
+@equipamento_router.post("/salvaEquipamento", response_model=EquipamentoResponse)
+def cadastrar_equipamento(equipamento: Equipamento, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
     try:
         return cadastrarEquipamento(equipamento, db)
 
@@ -28,7 +29,7 @@ def cadastrar_equipamento(equipamento: Equipamento, db: Session = Depends(databa
         )
 
 @equipamento_router.delete("/deletarEquipamneto/{id}")
-def deletarEquipamentos(id: int, db: Session = Depends(database.get_session)):
+def deletarEquipamentos(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         return deletarEquipamento(id, db)
@@ -62,7 +63,7 @@ def listarEquipamentos(db: Session = Depends(database.get_session)):
         )
 
 @equipamento_router.put("/editarEquipamneto/{id}")
-def listarEquipamentos(id: int, equipamamento: Equipamento, db: Session = Depends(database.get_session)):
+def editarEquipamentos(id: int, equipamamento: Equipamento, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         return editarEquipamento(id, equipamamento, db)

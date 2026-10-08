@@ -5,7 +5,7 @@ from controllers.usuarios_controller import inserirUsuarios, listarUsuario, edit
 from controllers.usuarios_controller import loginUsuario
 from dependencia.depenndencia import database
 from entidades.models.usuario_model import Usuarios
-from auth.auth_login import (Token, validar_token, logout_usuario)
+from auth.auth_login import (Token, admin_gestor_required, validar_token, logout_usuario)
 
 usaurioRoutes = APIRouter()
 
@@ -30,34 +30,18 @@ def inserir_usuarios(user: Usuarios,db: Session = Depends(database.get_session))
 
 @usaurioRoutes.post("/user_login", response_model=Token)
 def logar_usuarios(user: Usuarios, db: Session = Depends(database.get_session) ):
-    return loginUsuario(
+    loginUsuario(
         user.email,
         user.senha,
         db
     )
-
-
-@usaurioRoutes.post("/token", response_model=Token)
-def obter_token(
-    form_data: OAuth2PasswordRequestForm = Depends(),
-    db: Session = Depends(database.get_session),
-):
-    return loginUsuario(form_data.username, form_data.password, db)
-
-
-@usaurioRoutes.get("/protegido")
-def rota_protegida(usuario: str = Depends(validar_token)):
-    return {
-        "message": f"Bem-vindo, {usuario}!"
-    }
-
 
 @usaurioRoutes.post("/logout")
 def logout(resultado = Depends(logout_usuario)):
     return resultado
 
 @usaurioRoutes.put("/editar_usuario/{id}")
-def editarUsuarios(id: int, usuario: Usuarios, db: Session = Depends(database.get_session)):
+def editarUsuarios(id: int, usuario: Usuarios, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         return editarUsuario(id, usuario ,db)
@@ -68,7 +52,7 @@ def editarUsuarios(id: int, usuario: Usuarios, db: Session = Depends(database.ge
         raise HTTPException(status_code=500, detail=str(e))
 
 @usaurioRoutes.delete("/deletar_usuario/{id}")
-def deletarUsuarios(id: int, db: Session = Depends(database.get_session)):
+def deletarUsuarios(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         deletarUsuario(id ,db)
@@ -80,7 +64,7 @@ def deletarUsuarios(id: int, db: Session = Depends(database.get_session)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @usaurioRoutes.get("/listar_usuario")
-def listarUsuarios(db: Session = Depends(database.get_session)):
+def listarUsuarios(db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         return listarUsuario(db)

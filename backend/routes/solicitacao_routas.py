@@ -5,7 +5,7 @@ from dependencia.depenndencia import Database
 from controllers.solicitacao_emprestimo_controller import cadastrarSolicitacao, deletarSolicitacao, listarSolicitacao, editarSolicitacao, aprovarSolicitacao
 from entidades.models.solicitacao_emprestimo_model import SolicitacaoEmprestimo
 from entidades.models.usuario_model import Usuarios
-from auth.auth_login import validar_token
+from auth.auth_login import admin_gestor_required, validar_token
 
 solicitacao_router = APIRouter()
 
@@ -45,7 +45,7 @@ def solicitar_equipamentos(id: int, email_usuario: str = Depends(validar_token),
         )
 
 @solicitacao_router.delete("/deletar_solicitacao/{id}")
-def deletarSolicitacao(id: int, db: Session = Depends(database.get_session)):
+def deletarSolicitacao(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         deletarSolicitacao(id, db)
@@ -58,7 +58,7 @@ def deletarSolicitacao(id: int, db: Session = Depends(database.get_session)):
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.put("/editar_solicitacao/{id}")
-def editarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session)):
+def editarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         return editarSolicitacao(id, solicitacao, db)

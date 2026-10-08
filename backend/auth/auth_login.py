@@ -32,7 +32,7 @@ class Token(BaseModel):
 
 def criar_token(
     email: str,
-    role: str,
+    perfil: str,
     expires_delta: Optional[timedelta] = None
 ):
     expire = datetime.now(timezone.utc) + (
@@ -41,7 +41,7 @@ def criar_token(
 
     payload = {
         "sub": email,
-        "role": role,
+        "perfil": perfil,
         "exp": expire
     }
 
@@ -64,7 +64,7 @@ def validar_token(
         )
 
         email = payload.get("sub")
-        role = payload.get("role")
+        perfil = payload.get("perfil")
 
         if not email:
             raise HTTPException(
@@ -72,7 +72,7 @@ def validar_token(
                 detail="Token inválido"
             )
 
-        return {"email": email, "role": role}
+        return {"email": email, "perfil": perfil}
 
     except jwt.ExpiredSignatureError:
         raise HTTPException(
@@ -89,7 +89,7 @@ def validar_token(
 def admin_gestor_required(
     usuario: dict = Depends(validar_token)
 ):
-    if usuario["role"] not in ["Administrador", "Gestor"]:
+    if usuario["perfil"] not in ["Administrador", "Gestor"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Acesso negado, essa rota é restrita a administradores e gestores"

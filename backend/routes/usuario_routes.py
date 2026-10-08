@@ -1,11 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
 from sqlmodel import Session
 from controllers.usuarios_controller import inserirUsuarios, listarUsuario, editarUsuario, deletarUsuario
 from controllers.usuarios_controller import loginUsuario
 from dependencia.depenndencia import database
 from entidades.models.usuario_model import Usuarios
-from auth.auth_login import (Token, admin_gestor_required, validar_token, logout_usuario)
+from auth.auth_login import (Token, admin_gestor_required, logout_usuario)
 
 usaurioRoutes = APIRouter()
 
@@ -30,7 +29,7 @@ def inserir_usuarios(user: Usuarios,db: Session = Depends(database.get_session))
 
 @usaurioRoutes.post("/user_login", response_model=Token)
 def logar_usuarios(user: Usuarios, db: Session = Depends(database.get_session) ):
-    loginUsuario(
+    return loginUsuario(
         user.email,
         user.senha,
         db

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
-from backend.routes.categoria_routes import admin_gestor_required
+from auth.auth_login import admin_gestor_required
 from dependencia.depenndencia import Database
 from entidades.models.equipamento_model import Equipamento
 from controllers.equipamento_controller import cadastrarEquipamento

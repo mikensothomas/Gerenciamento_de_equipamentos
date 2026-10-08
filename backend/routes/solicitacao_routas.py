@@ -92,12 +92,12 @@ def listar_solicitacoes(db: Session = Depends(database.get_session), usuario_tok
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.put("/alterar_solicitacao/{id}")
-def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, email_user: str = Depends(validar_token), db: Session = Depends(database.get_session)):
+def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), usuario: dict = Depends(admin_gestor_required)):
     try:
 
         aprovador = db.exec(
             select(Usuarios).where(
-                Usuarios.email == email_user
+                Usuarios.email == usuario["email"]
             )
         ).first()
 
@@ -105,12 +105,6 @@ def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, email_user: 
             raise HTTPException(
                 status_code=403,
                 detail="Token não fornecido"
-            )
-
-        if aprovador.perfil not in ("Administrador", "Gestor"):
-            raise HTTPException(
-                status_code=403,
-                detail="Esse usuário não pode aprovar nem reprovar solicitação"
             )
         
         return aprovarSolicitacao(id, solicitacao, aprovador, db)

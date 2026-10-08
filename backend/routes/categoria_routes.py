@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from backend.auth.auth_login import admin_gestor_required
+from auth.auth_login import admin_gestor_required
 from controllers.categoria_equipamento_controllers import inserirCategoria, listarCategoria, deletarCategoria, editarCategoria
 from sqlmodel import Session
 from dependencia.depenndencia import database

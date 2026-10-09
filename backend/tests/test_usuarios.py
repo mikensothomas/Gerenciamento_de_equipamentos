@@ -4,6 +4,28 @@ from random import randrange
 
 from fastapi import status
 
+EMAIL = "mikensonthomas0@gmail.com"
+SENHA = "111111"
+
+def obter_token(client, email=EMAIL, senha=SENHA):
+    response = client.post(
+        "/user_login",
+        json={"email": email, "senha": senha}
+    )
+
+    assert response.status_code == status.HTTP_200_OK, (
+        f"Falha no login: {response.text}"
+    )
+
+    dados = response.json()
+    assert "access_token" in dados
+
+    return dados["access_token"]
+
+def obter_headers(client):
+    token = obter_token(client)
+    return {"Authorization": f"Bearer {token}"}
+
 
 def criar_usuario(email=None, cpf=None, perfil="Aluno"):
     return {
@@ -88,7 +110,10 @@ def test_cadastrar_usuario_perfil_invalido(client):
     )
 
 def test_listar_usuarios(client):
-    response = client.get("/listar_usuario")
+
+    headers = obter_headers(client)
+
+    response = client.get("/listar_usuario", headers=headers)
 
     assert response.status_code == 200, response.text
     assert isinstance(response.json(), list)

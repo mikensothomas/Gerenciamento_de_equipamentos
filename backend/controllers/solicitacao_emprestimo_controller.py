@@ -13,8 +13,13 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
 
         equipamento = db.get(Equipamento, solicitacao_data.equipamento_id)
 
+        from fastapi import HTTPException
+
         if not equipamento:
-            raise ValueError("Equipamento não encontrado")
+            raise HTTPException(
+                status_code=404,
+                detail="Equipamento não encontrado"
+            )
 
         if equipamento.status_equipamento != equipamento.status_equipamento.DISPONIVEL:
             raise ValueError("Equipamento não disponível para empréstimo")
@@ -37,15 +42,24 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
 
         return solicitacao_data
 
+    except HTTPException:
+        db.rollback()
+        raise
+
     except IntegrityError as e:
-        raise ValueError("Erro de integridade nos dados informados") from e
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="Erro de integridade nos dados informados"
+        ) from e
+
     except Exception as e:
         db.rollback()
         print("ERRO REAL:", repr(e))
         raise HTTPException(
             status_code=500,
-            detail=str(e)
-        )
+            detail="Erro interno ao cadastrar solicitação"
+        ) from e
 
 
 def deletarSolicitacao(id: int, db: Session):

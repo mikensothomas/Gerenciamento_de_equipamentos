@@ -3,14 +3,14 @@ from sqlmodel import Session
 from controllers.usuarios_controller import inserirUsuarios, listarUsuario, editarUsuario, deletarUsuario
 from controllers.usuarios_controller import loginUsuario
 from dependencia.depenndencia import database
-from entidades.models.usuario_model import Usuarios
+from entidades.models.usuario_model import Usuarios, UsuarioCadastro
 from auth.auth_login import (Token, admin_gestor_required, logout_usuario)
 
 usaurioRoutes = APIRouter()
 
 
 @usaurioRoutes.post("/user_register")
-def inserir_usuarios(user: Usuarios,db: Session = Depends(database.get_session)):
+def inserir_usuarios(user: UsuarioCadastro, db: Session = Depends(database.get_session)):
 
     try:
         return inserirUsuarios(user, db)

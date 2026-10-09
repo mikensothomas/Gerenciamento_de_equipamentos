@@ -1,4 +1,4 @@
-from entidades.models.usuario_model import Usuarios
+from entidades.models.usuario_model import UsuarioCadastro, Usuarios
 from sqlmodel import Session, select
 from fastapi import HTTPException
 from services.password_hash import hash_password
@@ -7,18 +7,11 @@ from services.password_hash import verificar_password
 from datetime import timedelta
 from auth.auth_login import ( criar_token, ACCESS_TOKEN_EXPIRE_MINUTES )
 
-def inserirUsuarios(usuario: Usuarios, db = Session):
-
+def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
     try:
         user_existente_por_cpf = db.exec(
             select(Usuarios).where(
                 Usuarios.cpf == usuario.cpf
-            )
-        ).first()
-
-        user_existente_por_email = db.exec(
-            select(Usuarios).where(
-                Usuarios.email == usuario.email
             )
         ).first()
 
@@ -28,26 +21,51 @@ def inserirUsuarios(usuario: Usuarios, db = Session):
                 detail="CPF duplicado"
             )
 
+        user_existente_por_email = db.exec(
+            select(Usuarios).where(
+                Usuarios.email == usuario.email
+            )
+        ).first()
+
         if user_existente_por_email:
             raise HTTPException(
                 status_code=400,
                 detail="Email duplicado"
             )
 
-        usuario.senha = hash_password(usuario.senha)
-        
-        inserir_usuarios = Usuarios.model_validate(usuario)
-        db.add(inserir_usuarios)
+        novo_usuario = Usuarios(
+            cpf=usuario.cpf,
+            nome=usuario.nome,
+            email=usuario.email,
+            senha=hash_password(usuario.senha),
+            status_usuario=usuario.status_usuario,
+            perfil=usuario.perfil
+        )
+
+        db.add(novo_usuario)
         db.commit()
-        db.refresh(inserir_usuarios)
+        db.refresh(novo_usuario)
+
         return {
-            "message": "Cadastro feito com sucesso!",
+            "message": "Cadastro feito com sucesso!"
         }
-    
+
+    except HTTPException:
+        raise
+
     except OperationalError as e:
-        raise RuntimeError("Falha na conexão com o banco de dados") from e
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Falha na conexão com o banco de dados"
+        ) from e
+
     except IntegrityError as e:
-        raise ValueError("Verifique os dados") from e
+        db.rollback()
+        raise HTTPException(
+            status_code=400,
+            detail="CPF ou e-mail já cadastrado"
+        ) from e
 
 def listarUsuario(db: Session):
 
@@ -122,7 +140,7 @@ def loginUsuario(email: str, senha: str, db: Session):
                 detail="E-mail ou senha incorretos"
             )
 
-        if usuario.status_usuario != "Ativo":
+        if usuario.status_usuario != usuario.status_usuario.ATIVO:
             raise HTTPException(
                 status_code=401,
                 detail="Usuário bloqueado ou inativo"

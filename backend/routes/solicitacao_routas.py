@@ -13,11 +13,11 @@ database = Database()
 
 
 @solicitacao_router.post("/solicitar_equipamento/{id}", response_model=SolicitacaoEmprestimo)
-def solicitar_equipamentos(id: int, email_usuario: str = Depends(validar_token), db: Session = Depends(database.get_session)):
+def solicitar_equipamentos(id: int, usuario_token: dict = Depends(validar_token), db: Session = Depends(database.get_session)):
 
     usuario = db.exec(
         select(Usuarios).where(
-            Usuarios.email == email_usuario
+            Usuarios.email == usuario_token["email"]
         )
     ).first()
 
@@ -45,7 +45,7 @@ def solicitar_equipamentos(id: int, email_usuario: str = Depends(validar_token),
         )
 
 @solicitacao_router.delete("/deletar_solicitacao/{id}")
-def deletarSolicitacao(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def deletar_solicitacao(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         deletarSolicitacao(id, db)
@@ -58,7 +58,7 @@ def deletarSolicitacao(id: int, db: Session = Depends(database.get_session), _: 
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.put("/editar_solicitacao/{id}")
-def editarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def editar_solicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
 
     try:
         return editarSolicitacao(id, solicitacao, db)
@@ -69,12 +69,12 @@ def editarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session =
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.get("/listar_solicitacao")
-def listar_solicitacoes(db: Session = Depends(database.get_session), usuario_token: str = Depends(validar_token)):
+def listar_solicitacoes(db: Session = Depends(database.get_session), usuario_token: dict = Depends(validar_token)):
 
     try:
         usuario = db.exec(
             select(Usuarios).where(
-                Usuarios.email == usuario_token
+                Usuarios.email == usuario_token["email"]
             )
         ).first()
 

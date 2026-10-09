@@ -141,7 +141,7 @@ def loginUsuario(email: str, senha: str, db: Session):
 
         token = criar_token(
             email=usuario.email,
-            role=usuario.perfil,
+            perfil=usuario.perfil,
             expires_delta=timedelta(
                 minutes=ACCESS_TOKEN_EXPIRE_MINUTES
             )

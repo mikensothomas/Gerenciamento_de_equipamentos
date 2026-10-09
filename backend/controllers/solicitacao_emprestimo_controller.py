@@ -37,6 +37,8 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
 
         return solicitacao_data
 
+    except IntegrityError as e:
+        raise ValueError("Erro de integridade nos dados informados") from e
     except Exception as e:
         db.rollback()
         print("ERRO REAL:", repr(e))
@@ -44,14 +46,12 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
             status_code=500,
             detail=str(e)
         )
-    except IntegrityError as e:
-        raise ValueError("Erro de integridade nos dados informados") from e
 
 
-def deletarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session):
+def deletarSolicitacao(id: int, db: Session):
 
     try:
-        solicitacao = db.exec(select(SolicitacaoEmprestimo).where(solicitacoes.id_solicitacao_emprestimo == id)).first()
+        solicitacao = db.exec(select(SolicitacaoEmprestimo).where(SolicitacaoEmprestimo.id_solicitacao_emprestimo == id)).first()
 
         if not solicitacao:
             raise HTTPException(

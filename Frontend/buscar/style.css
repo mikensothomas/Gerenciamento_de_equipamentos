@@ -132,3 +132,124 @@ header>.input-buscar>input {
         height: 40px;
     }
 }
+
+.containe-one-two {
+    margin-top: 40px;
+    margin-left: 40px;
+    margin-right: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.container-one {
+    height: 75vh;
+    width: 20vw;
+    border-radius: 10px;
+    background-color: #6ae482;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+}
+
+.container-one>div>img {
+    width: 40px;
+    height: auto;
+}
+
+.container-one>div>a {
+    text-decoration: none;
+}
+
+.container-one>div {
+    margin-left: 40px;
+}
+
+.container-one-item {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.container-one-item > img {
+    filter: invert(18%) sepia(21%) saturate(983%) hue-rotate(181deg) brightness(95%) contrast(93%);
+}
+
+.container-two {
+    height: 75vh;
+    width: 70vw;
+    border-radius: 10px;
+    background-color: #6ae482;
+}
+
+.container-two>div {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.equipamento {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    text-align: center;
+}
+
+.equipamento>div {
+    padding: 25px;
+    background-color: #273242;
+    color: rgb(238, 232, 232);
+    border-radius: 15px;
+}
+
+.equipamento>div>p {
+    font-weight: 80;
+    font-size: large;
+}
+
+.equipamento-imagem {
+    display: flex;
+    gap: 70px;
+    text-align: center;
+}
+
+.equipamento-imagem>div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 300px;
+    height: 400px;
+    background-color: #273242;
+    border-radius: 15px;
+    color: rgb(238, 232, 232);
+}
+
+.equipamento-imagem>div>p,
+.equipamento-imagem>div>span {
+    font-weight: 100;
+    font-size: larger;
+}
+
+.equipamento-imagem>div>img {
+    width: 200px;
+    height: auto;
+}
+
+.tag-a>a {
+    padding: 10px;
+    background-color: #6ae482;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.tag-a {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}

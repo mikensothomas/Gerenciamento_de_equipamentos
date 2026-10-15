@@ -77,3 +77,178 @@ button:hover {
 button:active {
     background-color: rgb(167, 167, 193);
 }
+
+
+html {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: clip;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    padding: clamp(15px, 4vw, 40px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    width: 100%;
+    max-width: 600px;
+    min-width: 0;
+    padding: clamp(25px, 5vw, 50px);
+    gap: 25px;
+}
+
+header {
+    width: 100%;
+    gap: 10px;
+}
+
+header h1 {
+    font-size: clamp(23px, 4vw, 34px);
+    overflow-wrap: anywhere;
+}
+
+header h3 {
+    font-size: clamp(18px, 2.5vw, 24px);
+}
+
+form {
+    width: 100%;
+    gap: 12px;
+}
+
+label {
+    font-size: 16px;
+}
+
+input {
+    width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    height: auto;
+    padding: 12px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    max-width: 100%;
+    min-height: 46px;
+    margin-top: 5px;
+}
+
+footer {
+    width: 100%;
+    margin-top: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+footer p,
+footer a {
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 25px;
+    }
+
+    main {
+        max-width: 500px;
+        padding: clamp(25px, 6vw, 40px);
+    }
+
+    footer {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 15px;
+        align-items: flex-start;
+    }
+
+    main {
+        padding: 25px 20px;
+        border-radius: 15px;
+        gap: 22px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+
+    header h3 {
+        font-size: 19px;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    input {
+        font-size: 16px;
+    }
+
+    footer {
+        gap: 10px;
+    }
+
+    footer p,
+    footer a {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 320px) {
+    body {
+        padding: 10px;
+    }
+
+    main {
+        padding: 22px 15px;
+        gap: 20px;
+    }
+
+    header h1 {
+        font-size: 21px;
+    }
+
+    header h3 {
+        font-size: 17px;
+    }
+
+    footer p,
+    footer a {
+        font-size: 12px;
+    }
+}
+
+@media (max-height: 600px) and (orientation: landscape) {
+    body {
+        align-items: flex-start;
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    main {
+        padding: 25px;
+        gap: 15px;
+    }
+
+    footer {
+        margin-top: 0;
+    }
+}

@@ -44,6 +44,8 @@ class Equipamento(EquipamentoBase, table=True):
         default=1
     )
 
+    picture: str = Field(nullable=False)
+
 
 class EquipamentoResponse(SQLModel):
     equipamento_id: int
@@ -55,3 +57,4 @@ class EquipamentoResponse(SQLModel):
     status_equipamento: EquipamentoStatus
     equipamento_categoria_id: int
     quantidade: int
+    picture: str

@@ -1,5 +1,8 @@
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
 
 from DB.db import Database
 
@@ -11,6 +14,10 @@ from routes import (
 )
 
 db = Database()
+
+BASE_DIR = Path(__file__).resolve().parent
+UPLOAD_DIR = BASE_DIR / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 
 @asynccontextmanager
@@ -24,6 +31,12 @@ app = FastAPI(
     description="This is a sample FastAPI application with a custom title and description.",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+app.mount(
+    "/uploads",
+    StaticFiles(directory=str(UPLOAD_DIR)),
+    name="uploads"
 )
 
 

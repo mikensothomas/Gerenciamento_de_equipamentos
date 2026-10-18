@@ -112,7 +112,7 @@ async def editar_equipamentos(
     quantidade: int = Form(...),
     file: UploadFile = File(None),
     db: Session = Depends(database.get_session),
-    # _: dict = Depends(admin_gestor_required)
+    _: dict = Depends(admin_gestor_required)
 ):
     try:
         equipamento_atual = db.get(Equipamento, id)

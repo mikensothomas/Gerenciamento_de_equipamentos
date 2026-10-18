@@ -10,11 +10,33 @@
 </head>
 
 <body>
+
+    <header class="navbar">
+        <a href="index.html" class="logo">EquipaGO</a>
+
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"
+            type="button">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="menu" id="menu">
+            <a href="../../login/index.html">Login</a>
+            <a href="../../cadastro/usuario/index.html">Cadastro Usuário</a>
+            <a href="../../cadastro/equipamento/index.html" class="active">
+                Cadastro Equipamento
+            </a>
+            <a href="../../solicitacoes/index.html">Solicitações</a>
+            <a href="../../buscar/index.html">Dashboard</a>
+        </nav>
+    </header>
+
     <main>
-        <header>
+        <section>
             <h1>Cadastro de Equipamento</h1>
             <h3>EquipaGO</h3>
-        </header>
+        </section>
         <form action="">
             <label for="nome">Nome do equipamento</label>
             <input id="nome" name="nome" type="text" placeholder="Digite o nome do equipamento" required>
@@ -29,6 +51,6 @@
             <button type="button">Cadastrar</button>
         </form>
     </main>
+    <script src="../../js/menu.js"></script>
 </body>
-
 </html>

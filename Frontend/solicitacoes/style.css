@@ -85,6 +85,13 @@ header>.input-buscar>input {
     border-radius: 5px;
 }
 
+.container-one-item a.active {
+    background-color: #273242;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
 @media (max-width: 900px) {
     header {
         flex-wrap: wrap;
@@ -162,6 +169,7 @@ header>.input-buscar>input {
 
 .container-one>div>a {
     text-decoration: none;
+    color: #273242;
 }
 
 .container-one>div {

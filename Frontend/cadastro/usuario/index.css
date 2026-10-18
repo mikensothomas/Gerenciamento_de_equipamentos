@@ -5,67 +5,179 @@
 }
 
 html {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: clip;
     font-family: Arial, Helvetica, sans-serif;
     background-color: #273242;
 }
 
 body {
-    height: 100vh;
-    width: 100vw;
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+    display: block;
+}
+
+.navbar {
+    width: 100%;
+    min-height: 75px;
+    padding: 15px 5%;
+    background-color: #273242;
+
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+
+    position: relative;
+    z-index: 1000;
+}
+
+.logo {
+    color: #6ae482;
+    text-decoration: none;
+    font-size: 26px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.menu a {
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 15px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.menu a:hover,
+.menu a.active {
+    background-color: #6ae482;
+    color: #273242;
+}
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    gap: 6px;
+
+    width: 44px;
+    min-height: 44px;
+    padding: 8px;
+
+    background: transparent;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 27px;
+    height: 3px;
+    background-color: #6ae482;
+    border-radius: 3px;
+    transition: 0.3s ease;
+}
+
+.menu-toggle:hover {
+    background-color: #3b4859;
 }
 
 main {
+    width: calc(100% - 30px);
+    max-width: 600px;
+    min-width: 0;
+    margin: 40px auto;
+    padding: clamp(25px, 5vw, 50px);
+
     border-radius: 20px;
     background-color: #6ae482;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px;
-    gap: 20px;
+    gap: 25px;
 }
 
-header {
+
+section {
+    width: 100%;
     text-align: center;
+
     display: flex;
     flex-direction: column;
     gap: 10px;
+}
+
+section h1 {
+    font-size: clamp(23px, 4vw, 34px);
+    overflow-wrap: anywhere;
+}
+
+section h3 {
+    font-size: clamp(18px, 2.5vw, 24px);
 }
 
 form {
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
+label {
+    font-size: 16px;
+}
+
 input {
-    width: 300px;
-    height: 35px;
+    width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    padding: 12px;
+
     border: none;
     border-radius: 5px;
-    padding-left: 10px;
-    box-sizing: border-box;
+
+    font-family: inherit;
+    font-size: 16px;
 }
 
-label {
-    font-size: large;
-}
+textarea {
+    width: 100%;
+    max-width: 100%;
+    min-height: 100px;
+    padding: 12px;
 
-footer {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+
+    font-family: inherit;
+    font-size: 16px;
+    resize: vertical;
 }
 
 button {
     appearance: none;
+    width: 100%;
+    max-width: 100%;
+    min-height: 46px;
+    margin-top: 5px;
+
     border: 0;
     border-radius: 8px;
-    min-height: 44px;
-    width: 300px;
+
     font: 600 15px/1.2 system-ui, sans-serif;
     cursor: pointer;
 }
@@ -78,177 +190,95 @@ button:active {
     background-color: rgb(167, 167, 193);
 }
 
-
-html {
-    width: 100%;
-    min-height: 100%;
-    overflow-x: clip;
-}
-
-body {
-    width: 100%;
-    min-height: 100vh;
-    height: auto;
-    padding: clamp(15px, 4vw, 40px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-main {
-    width: 100%;
-    max-width: 600px;
-    min-width: 0;
-    padding: clamp(25px, 5vw, 50px);
-    gap: 25px;
-}
-
-header {
-    width: 100%;
-    gap: 10px;
-}
-
-header h1 {
-    font-size: clamp(23px, 4vw, 34px);
-    overflow-wrap: anywhere;
-}
-
-header h3 {
-    font-size: clamp(18px, 2.5vw, 24px);
-}
-
-form {
-    width: 100%;
-    gap: 12px;
-}
-
-label {
-    font-size: 16px;
-}
-
-input {
-    width: 100%;
-    max-width: 100%;
-    min-height: 44px;
-    height: auto;
-    padding: 12px;
-    font-size: 16px;
-}
-
-button {
-    width: 100%;
-    max-width: 100%;
-    min-height: 46px;
-    margin-top: 5px;
-}
-
 footer {
-    width: 100%;
-    margin-top: 5px;
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    text-align: center;
+    flex-direction: row;
+    gap: 80px;
 }
 
-footer p,
-footer a {
-    font-size: 14px;
-    overflow-wrap: anywhere;
-}
+@media (max-width: 900px) {
+    .navbar {
+        flex-wrap: wrap;
+        padding: 15px 20px;
+    }
 
-@media (max-width: 768px) {
-    body {
-        padding: 25px;
+    .menu-toggle {
+        display: flex;
+    }
+
+    .menu {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+        padding-top: 10px;
+    }
+
+    .menu.open {
+        display: flex;
+    }
+
+    .menu a {
+        display: block;
+        padding: 14px;
+        text-align: left;
     }
 
     main {
         max-width: 500px;
+        margin-top: 25px;
         padding: clamp(25px, 6vw, 40px);
-    }
-
-    footer {
-        flex-direction: column;
     }
 }
 
 @media (max-width: 480px) {
-    body {
-        padding: 15px;
-        align-items: flex-start;
-    }
-
     main {
         padding: 25px 20px;
         border-radius: 15px;
         gap: 22px;
     }
 
-    header h1 {
+    section h1 {
         font-size: 24px;
     }
 
-    header h3 {
+    section h3 {
         font-size: 19px;
     }
 
     label {
         font-size: 15px;
     }
-
-    input {
-        font-size: 16px;
-    }
-
-    footer {
-        gap: 10px;
-    }
-
-    footer p,
-    footer a {
-        font-size: 13px;
-    }
 }
 
 @media (max-width: 320px) {
-    body {
-        padding: 10px;
+    .navbar {
+        padding: 12px;
+    }
+
+    .logo {
+        font-size: 22px;
     }
 
     main {
+        width: calc(100% - 20px);
         padding: 22px 15px;
-        gap: 20px;
     }
 
-    header h1 {
+    section h1 {
         font-size: 21px;
     }
 
-    header h3 {
+    section h3 {
         font-size: 17px;
-    }
-
-    footer p,
-    footer a {
-        font-size: 12px;
     }
 }
 
-@media (max-height: 600px) and (orientation: landscape) {
-    body {
-        align-items: flex-start;
-        padding-top: 15px;
-        padding-bottom: 15px;
-    }
-
+@media (max-height: 500px) and (orientation: landscape) {
     main {
+        margin-top: 15px;
+        margin-bottom: 15px;
         padding: 25px;
-        gap: 15px;
-    }
-
-    footer {
-        margin-top: 0;
     }
 }

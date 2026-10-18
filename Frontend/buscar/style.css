@@ -114,6 +114,7 @@ header>.input-buscar>input {
 
 .container-one>div>a {
     text-decoration: none;
+    color: #273242;
 }
 
 .container-one>div {
@@ -124,6 +125,13 @@ header>.input-buscar>input {
     display: flex;
     flex-direction: row;
     gap: 20px;
+}
+
+.container-one-item a.active {
+    background-color: #273242;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .container-one-item > img {

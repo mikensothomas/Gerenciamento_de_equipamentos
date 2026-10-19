@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, Form, File
 from sqlmodel import Session
 from utils.image_uploads import save_image
-from auth.auth_login import admin_gestor_required
+from auth.auth_login import admin_required
 from dependencia.depenndencia import Database
 from entidades.models.equipamento_model import Equipamento
 from controllers.equipamento_controller import cadastrarEquipamento
@@ -27,7 +27,7 @@ async def cadastrar_equipamento(
     quantidade: int = Form(...),
     file: UploadFile = File(...),
     db: Session = Depends(database.get_session),
-    _: dict = Depends(admin_gestor_required)
+    _: dict = Depends(admin_required)
 ):
     try:
         picture_url = await save_image(file)
@@ -62,7 +62,7 @@ async def cadastrar_equipamento(
 
 
 @equipamento_router.delete("/deletarEquipamneto/{id}")
-def deletarEquipamentos(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def deletarEquipamentos(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
 
     try:
         return deletarEquipamento(id, db)
@@ -112,7 +112,7 @@ async def editar_equipamentos(
     quantidade: int = Form(...),
     file: UploadFile = File(None),
     db: Session = Depends(database.get_session),
-    _: dict = Depends(admin_gestor_required)
+    _: dict = Depends(admin_required)
 ):
     try:
         equipamento_atual = db.get(Equipamento, id)

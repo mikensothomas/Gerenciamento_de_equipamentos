@@ -104,13 +104,24 @@ def validar_token(
         )
 
 
-def admin_gestor_required(
+def admin_required(
     usuario: dict = Depends(validar_token)
 ):
-    if usuario["perfil"] not in ["Administrador", "Gestor"]:
+    if usuario["perfil"] != "Administrador":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Acesso negado, essa rota é restrita a administradores e gestores"
+            detail="Acesso negado, essa rota é restrita a administradores"
+        )
+
+    return usuario
+
+def gestor_required(
+    usuario: dict = Depends(validar_token)
+):
+    if usuario["perfil"] != "Gestor":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Acesso negado, essa rota é restrita a gestores"
         )
 
     return usuario

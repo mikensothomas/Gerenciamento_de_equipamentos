@@ -5,7 +5,7 @@ from dependencia.depenndencia import Database
 from controllers.solicitacao_emprestimo_controller import cadastrarSolicitacao, deletarSolicitacao, listarSolicitacao, editarSolicitacao, aprovarSolicitacao
 from entidades.models.solicitacao_emprestimo_model import SolicitacaoEmprestimo
 from entidades.models.usuario_model import Usuarios
-from auth.auth_login import admin_gestor_required, validar_token
+from auth.auth_login import gestor_required, validar_token
 
 solicitacao_router = APIRouter()
 
@@ -45,7 +45,7 @@ def solicitar_equipamentos(id: int, usuario_token: dict = Depends(validar_token)
         )
 
 @solicitacao_router.delete("/deletar_solicitacao/{id}")
-def deletar_solicitacao(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def deletar_solicitacao(id: int, db: Session = Depends(database.get_session), _: dict = Depends(gestor_required)):
 
     try:
         deletarSolicitacao(id, db)
@@ -58,7 +58,7 @@ def deletar_solicitacao(id: int, db: Session = Depends(database.get_session), _:
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.put("/editar_solicitacao/{id}")
-def editar_solicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def editar_solicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), _: dict = Depends(gestor_required)):
 
     try:
         return editarSolicitacao(id, solicitacao, db)
@@ -92,7 +92,7 @@ def listar_solicitacoes(db: Session = Depends(database.get_session), usuario_tok
         raise HTTPException(status_code=500, detail=str(e))
 
 @solicitacao_router.put("/alterar_solicitacao/{id}")
-def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), usuario: dict = Depends(admin_gestor_required)):
+def alterarSolicitacao(id: int, solicitacao: SolicitacaoEmprestimo, db: Session = Depends(database.get_session), usuario: dict = Depends(gestor_required)):
     try:
 
         aprovador = db.exec(

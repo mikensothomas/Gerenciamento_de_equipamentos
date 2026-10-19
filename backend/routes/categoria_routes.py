@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from auth.auth_login import admin_gestor_required
+from auth.auth_login import admin_required
 from controllers.categoria_equipamento_controllers import inserirCategoria, listarCategoria, deletarCategoria, editarCategoria
 from sqlmodel import Session
 from dependencia.depenndencia import database
@@ -8,7 +8,7 @@ from entidades.models.categoria_model import CategoriaEquipamento
 categoriaEquipamentoRouter = APIRouter()
 
 @categoriaEquipamentoRouter.post("/criar_categoria")
-def inserir_Categoria(categoria: CategoriaEquipamento, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def inserir_Categoria(categoria: CategoriaEquipamento, db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
     try:
         return inserirCategoria(categoria,db)
     except ValueError as e:
@@ -17,7 +17,7 @@ def inserir_Categoria(categoria: CategoriaEquipamento, db: Session = Depends(dat
         raise HTTPException(status_code=500, detail=str(e))
 
 @categoriaEquipamentoRouter.get("/listar_categoria")
-def listarCategorias(db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def listarCategorias(db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
 
     try:
         return listarCategoria(db)
@@ -27,7 +27,7 @@ def listarCategorias(db: Session = Depends(database.get_session), _: dict = Depe
         raise HTTPException(status_code=500, detail=str(e))
 
 @categoriaEquipamentoRouter.put("/editar_categoria/{id}")
-def editarCategorias(id: int, categoria: CategoriaEquipamento, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def editarCategorias(id: int, categoria: CategoriaEquipamento, db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
 
     try:
         return editarCategoria(id, categoria, db)
@@ -38,7 +38,7 @@ def editarCategorias(id: int, categoria: CategoriaEquipamento, db: Session = Dep
         raise HTTPException(status_code=500, detail=str(e))
 
 @categoriaEquipamentoRouter.delete("/deletar_categoria/{id}")
-def deletarCategorias(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def deletarCategorias(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
 
     try:
         deletarCategoria(id ,db)

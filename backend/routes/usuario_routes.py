@@ -4,7 +4,7 @@ from controllers.usuarios_controller import inserirUsuarios, listarUsuario, edit
 from controllers.usuarios_controller import loginUsuario
 from dependencia.depenndencia import database
 from entidades.models.usuario_model import Usuarios, UsuarioCadastro
-from auth.auth_login import (Token, admin_gestor_required, logout_usuario, validar_token)
+from auth.auth_login import (Token, admin_required, gestor_required, logout_usuario, validar_token)
 
 usaurioRoutes = APIRouter()
 
@@ -40,7 +40,7 @@ def logout(resultado = Depends(logout_usuario)):
     return resultado
 
 @usaurioRoutes.put("/editar_usuario/{id}")
-def editarUsuarios(id: int, usuario: Usuarios, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def editarUsuarios(id: int, usuario: Usuarios, db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
 
     try:
         return editarUsuario(id, usuario ,db)
@@ -51,7 +51,7 @@ def editarUsuarios(id: int, usuario: Usuarios, db: Session = Depends(database.ge
         raise HTTPException(status_code=500, detail=str(e))
 
 @usaurioRoutes.delete("/deletar_usuario/{id}")
-def deletarUsuarios(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def deletarUsuarios(id: int, db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
 
     try:
         deletarUsuario(id ,db)
@@ -63,7 +63,7 @@ def deletarUsuarios(id: int, db: Session = Depends(database.get_session), _: dic
         raise HTTPException(status_code=500, detail=str(e))
 
 @usaurioRoutes.get("/listar_usuario")
-def listarUsuarios(db: Session = Depends(database.get_session), _: dict = Depends(admin_gestor_required)):
+def listarUsuarios(db: Session = Depends(database.get_session), _: dict = Depends(admin_required)):
 
     try:
         return listarUsuario(db)

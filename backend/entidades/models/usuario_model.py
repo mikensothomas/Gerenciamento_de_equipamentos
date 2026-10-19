@@ -23,6 +23,7 @@ class Usuarios(SQLModel, table = True):
             SQLEnum(PerfilUsuarios, values_callable=lambda enum: [e.value for e in enum])
         )
     )
+    picture: str = Field(nullable=True)
 
 
 class UsuarioCadastro(SQLModel):

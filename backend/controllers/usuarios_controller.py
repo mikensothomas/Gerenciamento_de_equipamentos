@@ -1,6 +1,6 @@
 from entidades.models.usuario_model import UsuarioCadastro, Usuarios
 from sqlmodel import Session, select
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 from services.password_hash import hash_password
 from sqlalchemy.exc import OperationalError, IntegrityError
 from services.password_hash import verificar_password
@@ -173,3 +173,60 @@ def loginUsuario(email: str, senha: str, db: Session):
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError as e:
         raise ValueError("Verifique os dados") from e
+
+def updatPicture(db: Session, current_user: str, picture: UploadFile):
+
+    try:
+        email = current_user.get("email")
+        
+        usuario = db.exec(
+            select(Usuarios).where(Usuarios.email == email)
+        ).first()
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuário não encontrado"
+            )
+
+        usuario.picture = picture
+
+        db.add(usuario)
+        db.commit()
+        db.refresh(usuario)
+
+        return {
+            "message": "Foto atualizada com sucesso",
+            "picture_url": f"http://127.0.0.1:8000{usuario.picture}"
+        }
+        
+    except OperationalError as e:
+        db.rollback()
+        raise RuntimeError("Falha na conexão com o banco de dados") from e
+
+def removePicture(db: Session, current_user: dict):
+    try:
+
+        email = current_user.get("email")
+
+        usuario = db.exec(
+            select(Usuarios).where(Usuarios.email == email)
+        ).first()
+
+        if not usuario:
+            raise HTTPException(
+                status_code=404,
+                detail="Usuário não encontrado"
+            )
+
+        usuario.picture = None
+
+        db.add(usuario)
+        db.commit()
+        db.refresh(usuario)
+
+        return usuario
+
+    except OperationalError as e:
+        db.rollback()
+        raise RuntimeError("Falha na conexão com o banco de dados") from e

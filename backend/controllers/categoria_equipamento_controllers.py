@@ -1,6 +1,5 @@
 from entidades.models.categoria_model import CategoriaEquipamento
 from sqlmodel import Session, select
-from fastapi import HTTPException
 from sqlalchemy.exc import OperationalError, IntegrityError
 
 def inserirCategoria(categoria: CategoriaEquipamento, db: Session):
@@ -13,10 +12,7 @@ def inserirCategoria(categoria: CategoriaEquipamento, db: Session):
         ).first()
         
         if categoria_exixtente:
-            raise HTTPException(
-                status_code=400,
-                detail="Nome duplicado"
-            )
+            raise ValueError("Nome duplicado")
             
         categoria_insert = CategoriaEquipamento.model_validate(categoria)
         db.add(categoria_insert)
@@ -33,7 +29,7 @@ def listarCategoria(db: Session):
         categorias = db.exec(select(CategoriaEquipamento)).all()
 
         if not categorias:
-            raise HTTPException("Nenhuma categoria encontrada")
+            raise ValueError("Nenhuma categoria encontrada")
         
         return categorias
     except OperationalError as e:
@@ -44,7 +40,7 @@ def deletarCategoria(id: int, db: Session):
         categoria = db.exec(select(CategoriaEquipamento).where(CategoriaEquipamento.categoria_id == id)).first()
 
         if not categoria:
-            raise HTTPException("Categoria não encontrada")
+            raise ValueError("Categoria não encontrada")
 
         db.delete(categoria)
         db.commit()
@@ -56,7 +52,7 @@ def deletarCategoria(id: int, db: Session):
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError:
         db.rollback()
-        raise HTTPException(
+        raise ValueError(
             status_code=400,
             detail="Não é possível excluir esta categoria, pois existem equipamentos vincurados a ela."
         )
@@ -67,7 +63,7 @@ def editarCategoria(id: int, categorias: CategoriaEquipamento, db: Session):
         categoria = db.get(CategoriaEquipamento, id)
 
         if not categoria:
-            raise HTTPException("Categoria não encontrada")
+            raise ValueError("Categoria não encontrada")
 
         categoria.categoria_name = categorias.categoria_name
         

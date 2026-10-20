@@ -1,6 +1,6 @@
 from entidades.models.usuario_model import UsuarioCadastro, Usuarios
 from sqlmodel import Session, select
-from fastapi import HTTPException, UploadFile
+from fastapi import UploadFile
 from services.password_hash import hash_password
 from sqlalchemy.exc import OperationalError, IntegrityError
 from services.password_hash import verificar_password
@@ -16,10 +16,7 @@ def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
         ).first()
 
         if user_existente_por_cpf:
-            raise HTTPException(
-                status_code=400,
-                detail="CPF duplicado"
-            )
+            raise ValueError(detail="CPF duplicado")
 
         user_existente_por_email = db.exec(
             select(Usuarios).where(
@@ -28,10 +25,7 @@ def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
         ).first()
 
         if user_existente_por_email:
-            raise HTTPException(
-                status_code=400,
-                detail="Email duplicado"
-            )
+            raise ValueError(detail="Email duplicado")
 
         novo_usuario = Usuarios(
             cpf=usuario.cpf,
@@ -50,22 +44,16 @@ def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
             "message": "Cadastro feito com sucesso!"
         }
 
-    except HTTPException:
+    except ValueError:
         raise
 
     except OperationalError as e:
         db.rollback()
-        raise HTTPException(
-            status_code=500,
-            detail="Falha na conexão com o banco de dados"
-        ) from e
+        raise ValueError("Falha na conexão com o banco de dados") from e
 
     except IntegrityError as e:
         db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="CPF ou e-mail já cadastrado"
-        ) from e
+        raise ValueError("CPF ou e-mail já cadastrado") from e
 
 def listarUsuario(db: Session):
 
@@ -73,7 +61,7 @@ def listarUsuario(db: Session):
         usuarios = db.exec(select(Usuarios)).all()
 
         if not usuarios:
-            raise HTTPException("Nenhum usuário encontrado")
+            raise ValueError("Nenhum usuário encontrado")
 
         return usuarios
     
@@ -85,7 +73,7 @@ def deletarUsuario(id: int, db: Session):
         usuario = db.exec(select(Usuarios).where(Usuarios.id_usuario == id)).first()
 
         if not usuario:
-            raise HTTPException("Usuario não encontrado")
+            raise ValueError("Usuario não encontrado")
 
         db.delete(usuario)
         db.commit()
@@ -94,17 +82,14 @@ def deletarUsuario(id: int, db: Session):
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError:
         db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="Não é possível excluir este usuario, pois existem solicitações vincuradas a ele."
-        )
+        raise ValueError("Não é possível excluir este usuario, pois existem solicitações vincuradas a ele.")
 
 def editarUsuario(id: int, usuarios: Usuarios, db: Session):
     try:
         usuario = db.get(Usuarios, id)
 
         if not usuario:
-            raise HTTPException("Usuario não encontrado")
+            raise ValueError("Usuario não encontrado")
 
         usuario.cpf = usuarios.cpf
         usuario.nome = usuarios.nome
@@ -135,16 +120,10 @@ def loginUsuario(email: str, senha: str, db: Session):
         ).first()
 
         if not usuario:
-            raise HTTPException(
-                status_code=401,
-                detail="E-mail ou senha incorretos"
-            )
+            raise ValueError("E-mail ou senha incorretos")
 
         if usuario.status_usuario != usuario.status_usuario.ATIVO:
-            raise HTTPException(
-                status_code=401,
-                detail="Usuário bloqueado ou inativo"
-            ) 
+            raise ValueError(detail="Usuário bloqueado ou inativo") 
 
         senha_valida = verificar_password(
             senha,
@@ -152,10 +131,7 @@ def loginUsuario(email: str, senha: str, db: Session):
         )
 
         if not senha_valida:
-            raise HTTPException(
-                status_code=401,
-                detail="E-mail ou senha incorretos"
-            )
+            raise ValueError("E-mail ou senha incorretos")
 
         token = criar_token(
             email=usuario.email,
@@ -184,10 +160,7 @@ def updatPicture(db: Session, current_user: str, picture: UploadFile):
         ).first()
 
         if not usuario:
-            raise HTTPException(
-                status_code=404,
-                detail="Usuário não encontrado"
-            )
+            raise ValueError("Usuário não encontrado")
 
         usuario.picture = picture
 
@@ -214,10 +187,7 @@ def removePicture(db: Session, current_user: dict):
         ).first()
 
         if not usuario:
-            raise HTTPException(
-                status_code=404,
-                detail="Usuário não encontrado"
-            )
+            raise ValueError("Usuário não encontrado")
 
         usuario.picture = None
 

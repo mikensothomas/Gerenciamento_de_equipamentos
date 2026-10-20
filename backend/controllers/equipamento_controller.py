@@ -4,8 +4,6 @@ from entidades.models.equipamento_model import Equipamento
 from entidades.models.categoria_model import CategoriaEquipamento
 from entidades.models.equipamento_model import Equipamento
 from sqlmodel import Session, select
-from fastapi import HTTPException
-
 
 def cadastrarEquipamento(
     equipamento_data: Equipamento,
@@ -55,10 +53,7 @@ def deletarEquipamento(id: int, db: Session):
         ).first()
 
         if not equipamento:
-            raise HTTPException(
-                status_code=404,
-                detail="Equipamento não encontrado"
-            )
+            raise ValueError("Equipamento não encontrado")
 
         db.delete(equipamento)
         db.commit()

@@ -3,7 +3,6 @@ from sqlalchemy.exc import OperationalError, IntegrityError
 from entidades.models.solicitacao_emprestimo_model import SolicitacaoEmprestimo
 from entidades.models.equipamento_model import Equipamento
 from entidades.models.usuario_model import Usuarios
-from fastapi import HTTPException
 
 def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
     try:
@@ -13,13 +12,8 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
 
         equipamento = db.get(Equipamento, solicitacao_data.equipamento_id)
 
-        from fastapi import HTTPException
-
         if not equipamento:
-            raise HTTPException(
-                status_code=404,
-                detail="Equipamento não encontrado"
-            )
+            raise ValueError("Equipamento não encontrado")
 
         if equipamento.status_equipamento != equipamento.status_equipamento.DISPONIVEL:
             raise ValueError("Equipamento não disponível para empréstimo")
@@ -42,24 +36,18 @@ def cadastrarSolicitacao(solicitacao_data: SolicitacaoEmprestimo, db: Session):
 
         return solicitacao_data
 
-    except HTTPException:
+    except ValueError:
         db.rollback()
         raise
 
     except IntegrityError as e:
         db.rollback()
-        raise HTTPException(
-            status_code=400,
-            detail="Erro de integridade nos dados informados"
-        ) from e
+        raise ValueError("Erro de integridade nos dados informados") from e
 
     except Exception as e:
         db.rollback()
         print("ERRO REAL:", repr(e))
-        raise HTTPException(
-            status_code=500,
-            detail="Erro interno ao cadastrar solicitação"
-        ) from e
+        raise ValueError("Erro interno ao cadastrar solicitação") from e
 
 
 def deletarSolicitacao(id: int, db: Session):
@@ -68,10 +56,7 @@ def deletarSolicitacao(id: int, db: Session):
         solicitacao = db.exec(select(SolicitacaoEmprestimo).where(SolicitacaoEmprestimo.id_solicitacao_emprestimo == id)).first()
 
         if not solicitacao:
-            raise HTTPException(
-                status_code=404,
-                detail="Solicitação não encontrada"
-            )
+            raise ValueError("Solicitação não encontrada")
 
         db.delete(solicitacao)
         db.commit()
@@ -95,7 +80,7 @@ def listarSolicitacao(db: Session, usuario: Usuarios):
         solicitacao = db.exec(statement).all()
 
         if not solicitacao:
-            raise HTTPException("Nenhuma solicitação encontarda")
+            raise ValueError("Nenhuma solicitação encontarda")
 
         return solicitacao
     
@@ -109,7 +94,7 @@ def editarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, db: Session)
         solicitacao = db.get(SolicitacaoEmprestimo, id)
 
         if not solicitacao:
-            raise HTTPException("Soliciação informada não existe")
+            raise ValueError("Soliciação informada não existe")
 
         solicitacao.status_solicitacao = solicitacoes.status_solicitacao
         solicitacao.data_aprovacao = solicitacoes.data_aprovacao
@@ -133,7 +118,7 @@ def aprovarSolicitacao(id: int, solicitacoes: SolicitacaoEmprestimo, aprovador_s
         solicitacao = db.get(SolicitacaoEmprestimo, id)
         
         if not solicitacao:
-            raise HTTPException("Solicitação não encontrado")
+            raise ValueError("Solicitação não encontrado")
 
         equipamento = db.get(Equipamento, solicitacao.equipamento_id)
         

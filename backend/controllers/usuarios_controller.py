@@ -16,7 +16,7 @@ def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
         ).first()
 
         if user_existente_por_cpf:
-            raise ValueError(detail="CPF duplicado")
+            raise ValueError("CPF duplicado")
 
         user_existente_por_email = db.exec(
             select(Usuarios).where(
@@ -25,7 +25,7 @@ def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
         ).first()
 
         if user_existente_por_email:
-            raise ValueError(detail="Email duplicado")
+            raise ValueError("Email duplicado")
 
         novo_usuario = Usuarios(
             cpf=usuario.cpf,
@@ -123,7 +123,7 @@ def loginUsuario(email: str, senha: str, db: Session):
             raise ValueError("E-mail ou senha incorretos")
 
         if usuario.status_usuario != usuario.status_usuario.ATIVO:
-            raise ValueError(detail="Usuário bloqueado ou inativo") 
+            raise ValueError("Usuário bloqueado ou inativo") 
 
         senha_valida = verificar_password(
             senha,

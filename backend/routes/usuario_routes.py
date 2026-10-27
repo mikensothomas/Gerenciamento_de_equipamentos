@@ -4,7 +4,7 @@ from controllers.usuarios_controller import inserirUsuarios, listarUsuario, edit
 from controllers.usuarios_controller import loginUsuario
 from dependencia.depenndencia import database
 from entidades.models.usuario_model import Usuarios, UsuarioCadastro
-from auth.auth_login import (Token, admin_required, gestor_required, logout_usuario, validar_token)
+from auth.auth_login import (Token, admin_required, logout_usuario, validar_token)
 
 usaurioRoutes = APIRouter()
 

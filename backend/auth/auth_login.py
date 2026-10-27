@@ -2,7 +2,11 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 import os
+from uuid import uuid4
 import jwt
+from sqlmodel import Session, select
+from dependencia.depenndencia import database
+from entidades.models.token_model import RevokedToken
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -26,9 +30,6 @@ if not ALGORITHM:
 
 bearer_scheme = HTTPBearer()
 
-tokens_revogados: set[str] = set()
-
-
 class Token(BaseModel):
     access_token: str
     token_type: str
@@ -47,6 +48,7 @@ def criar_token(
     payload = {
         "sub": email,
         "perfil": perfil,
+        "jti": str(uuid4()),
         "exp": expire
     }
 
@@ -60,15 +62,10 @@ def criar_token(
 
 
 def validar_token(
-    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    session: Session = Depends(database.get_session)
 ):
     token = credentials.credentials
-
-    if token in tokens_revogados:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token revogado. Faça login novamente."
-        )
 
     try:
         payload = jwt.decode(
@@ -79,11 +76,24 @@ def validar_token(
 
         email = payload.get("sub")
         perfil = payload.get("perfil")
+        jti = payload.get("jti")
 
         if not email or not perfil:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Token inválido"
+            )
+
+        token_revogado = session.exec(
+            select(RevokedToken).where(
+                RevokedToken.jti == jti
+            )
+        ).first()
+
+        if token_revogado:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token revogado. Faça login novamente."
             )
 
         return {
@@ -128,22 +138,52 @@ def gestor_required(
 
 
 def logout_usuario(
-    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme)
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    session: Session = Depends(database.get_session)
 ):
     token = credentials.credentials
 
-    if token in tokens_revogados:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token já revogado"
-        )
-
     try:
-        jwt.decode(
+        payload = jwt.decode(
             token,
             SECRET_KEY,
             algorithms=[ALGORITHM]
         )
+
+        jti = payload.get("jti")
+        exp = payload.get("exp")
+
+        if not jti or not exp:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token inválido"
+            )
+
+        toke_revogado = session.exec(select(RevokedToken).where(RevokedToken.jti == jti)).first()
+
+        if toke_revogado:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Token já revogado"
+            )
+
+        registro = RevokedToken(
+            jti=jti,
+            expires_at=datetime.fromtimestamp(
+                exp,
+                tz=timezone.utc
+            ).replace(tzinfo=None),
+            revoked_at=datetime.now(
+                timezone.utc
+            ).replace(tzinfo=None)
+        )
+
+        session.add(registro)
+        session.commit()
+        
+        return {
+            "message": "Logout realizado com sucesso"
+        }
 
     except jwt.ExpiredSignatureError:
         raise HTTPException(
@@ -156,9 +196,3 @@ def logout_usuario(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Token inválido"
         )
-
-    tokens_revogados.add(token)
-
-    return {
-        "message": "Logout realizado com sucesso"
-    }

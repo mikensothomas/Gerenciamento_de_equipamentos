@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional
 import os
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 import jwt
 from sqlmodel import Session, select
 from dependencia.depenndencia import database
@@ -171,10 +172,10 @@ def logout_usuario(
             jti=jti,
             expires_at=datetime.fromtimestamp(
                 exp,
-                tz=timezone.utc
+                tz=ZoneInfo("America/Sao_Paulo")
             ).replace(tzinfo=None),
             revoked_at=datetime.now(
-                timezone.utc
+                ZoneInfo("America/Sao_Paulo")
             ).replace(tzinfo=None)
         )
 

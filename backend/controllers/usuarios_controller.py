@@ -133,18 +133,24 @@ def loginUsuario(email: str, senha: str, db: Session):
         if not senha_valida:
             raise ValueError("E-mail ou senha incorretos")
 
-        token = criar_token(
+        access_token = criar_token(
             email=usuario.email,
             perfil=usuario.perfil,
-            expires_delta=timedelta(
-                minutes=ACCESS_TOKEN_EXPIRE_MINUTES
-            )
+            tipo="access"
         )
-        
+
+        refresh_token = criar_token(
+            email=usuario.email,
+            perfil=usuario.perfil,
+            tipo="refresh"
+        )
+
         return {
-            "access_token": token,
-            "token_type": "bearer",
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer"
         }
+    
     except OperationalError as e:
         raise RuntimeError("Falha na conexão com o banco de dados") from e
     except IntegrityError as e:

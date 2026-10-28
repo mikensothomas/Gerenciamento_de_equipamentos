@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, Form, File
 from sqlmodel import Session
 from utils.image_uploads import save_image
-from auth.auth_login import admin_required
+from auth.auth_login import (
+    admin_required,
+    validar_token   
+)
 from dependencia.depenndencia import Database
 from entidades.models.equipamento_model import Equipamento
 from controllers.equipamento_controller import cadastrarEquipamento
@@ -79,7 +82,9 @@ def deletarEquipamentos(id: int, db: Session = Depends(database.get_session), _:
         )
 
 @equipamento_router.get("/listarEquipamneto")
-def listarEquipamentos(db: Session = Depends(database.get_session)):
+def listarEquipamentos(db: Session = Depends(database.get_session),
+    _: dict = Depends(validar_token)
+):
 
     try:
         return listarEquipamento(db)

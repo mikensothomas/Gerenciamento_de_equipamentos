@@ -4,8 +4,7 @@ from fastapi import UploadFile
 from services.password_hash import hash_password
 from sqlalchemy.exc import OperationalError, IntegrityError
 from services.password_hash import verificar_password
-from datetime import timedelta
-from auth.auth_login import ( criar_token, ACCESS_TOKEN_EXPIRE_MINUTES )
+from auth.auth_login import criar_token
 
 def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
     try:

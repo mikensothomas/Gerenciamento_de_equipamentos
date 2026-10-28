@@ -185,7 +185,7 @@ def revogar_token(payload: dict, session: Session):
     session.add(
         RevokedToken(
             jti=jti,
-            expire_at=datetime.fromtimestamp(
+            expires_at=datetime.fromtimestamp(
                 exp,
                 tz=timezone.utc
             ).replace(tzinfo=None),

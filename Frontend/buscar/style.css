@@ -163,12 +163,12 @@ header > .user-name > img {
     gap: 12px;
 }
 
-.container-one-item > img {
+.container-one-item>img {
     width: 28px;
     max-width: 28px;
-    height: auto;
     flex-shrink: 0;
-    filter: invert(18%) sepia(21%) saturate(983%) hue-rotate(181deg) brightness(95%) contrast(93%);
+
+    filter: brightness(0) invert(18%) sepia(21%) saturate(983%) hue-rotate(181deg) brightness(95%) contrast(93%);
 }
 
 .container-one-item > a {

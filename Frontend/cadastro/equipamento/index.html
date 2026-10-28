@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#f2f6f5">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="../../Assets/logotipo.png">
     <title>Cadastro Equipamento</title>
 </head>
 
@@ -37,20 +38,68 @@
             <h1>Cadastro de Equipamento</h1>
             <h3>EquipaGO</h3>
         </section>
-        <form action="">
-            <label for="nome">Nome do equipamento</label>
-            <input id="nome" name="nome" type="text" placeholder="Digite o nome do equipamento" required>
-            <label for="patrimonio">Patrimonio</label>
-            <input id="patrimonio" name="patrimonio" type="text" placeholder="Patrimonio do equipamento" required>
-            <label for="marca">Marca</label>
-            <input id="marca" name="marca" type="marca" placeholder="Digite a marca do equipamento" required>
-            <label for="modelo">Modelo</label>
-            <input id="modelo" name="modelo" type="text" placeholder="Digite o modelo do equipamento" required>
-            <label for="descricao">Descrição</label>
-            <textarea id="descricao" name="descricao" placeholder="Descreva o equipamento" required></textarea>
-            <button type="button">Cadastrar</button>
+        <form action="" class="form-container">
+            <div class="form-grid">
+                <div class="form-column">
+                    <div class="input-group">
+                        <label for="nome">Nome do equipamento</label>
+                        <input id="nome" name="nome" type="text" placeholder="Digite o nome do equipamento" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="patrimonio">Patrimônio</label>
+                        <input id="patrimonio" name="patrimonio" type="text" placeholder="Patrimônio do equipamento"
+                            required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="marca">Marca</label>
+                        <input id="marca" name="marca" type="text" placeholder="Digite a marca do equipamento" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="modelo">Modelo</label>
+                        <input id="modelo" name="modelo" type="text" placeholder="Digite o modelo do equipamento"
+                            required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="descricao">Descrição</label>
+                        <textarea id="descricao" name="descricao" placeholder="Descreva o equipamento" rows="4"
+                            required></textarea>
+                    </div>
+                </div>
+
+                <div class="form-column">
+                    <div class="input-group">
+                        <label for="status">Status</label>
+                        <input id="status" name="status" type="text" placeholder="O status do equipamento">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="categoria">Categoria</label>
+                        <input id="categoria" name="categoria" type="text" placeholder="Digite a categoria" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="quantidade">Quantidade</label>
+                        <input id="quantidade" name="quantidade" type="number" placeholder="Digite a quantidade"
+                            required min="1" oninput="if(this.value < 1 && this.value !== '') this.value = 1;">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="imagem">Imagem</label>
+                        <input id="imagem" name="imagem" type="file" accept="image/*" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Cadastrar</button>
+            </div>
         </form>
     </main>
     <script src="../../js/menu.js"></script>
 </body>
+
 </html>

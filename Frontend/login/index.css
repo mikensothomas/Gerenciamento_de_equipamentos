@@ -17,6 +17,7 @@ body {
     min-height: 100vh;
     height: auto;
     display: block;
+    padding-top: 80px;
 }
 
 .navbar {
@@ -24,14 +25,18 @@ body {
     min-height: 75px;
     padding: 15px 5%;
     background-color: #273242;
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
 
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 25px;
 
-    position: relative;
-    z-index: 1000;
+    box-sizing: border-border-box; 
 }
 
 .logo {
@@ -170,6 +175,7 @@ textarea {
 
 button {
     appearance: none;
+    background-color: #1a71c8;
     width: 100%;
     max-width: 100%;
     min-height: 46px;
@@ -183,17 +189,21 @@ button {
 }
 
 button:hover {
-    background-color: #b0d6b8;
+    background-color: #0066cc;
 }
 
 button:active {
-    background-color: rgb(167, 167, 193);
+    background-color: #3292f1;
 }
 
 footer {
     display: flex;
     flex-direction: row;
     gap: 80px;
+}
+
+footer > a {
+    text-decoration: none;
 }
 
 @media (max-width: 900px) {

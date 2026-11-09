@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+sqlalchemy
+pymysql
+pydantic
+pydantic-settings
+python-dotenv
+PyJWT
+pwdlib[argon2]
+python-multipart
+
+# Dependências para testes automatizados
+pytest
+httpx

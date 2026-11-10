@@ -2,9 +2,18 @@
     var nameValue = nameInput.value.trim();
     var btnCadastrar = document.getElementById("cadastrar-btn");
 
-    if (nameValue === "" || nameValue.length < 2) {
-        btnCadastrar.disabled = true;
-        return false;
+    function validateName() {
+        if (nameValue === "" || nameValue.length < 3) {
+            nameInput.setCustomValidity("Por favor, preencha o campo Nome da categoria com pelo menos 3 caracteres.");
+            btnCadastrar.disabled = true;
+        } else {
+            nameInput.setCustomValidity("");
+            btnCadastrar.disabled = false;
+        }
+        nameInput.reportValidity();
     }
 
-    btnCadastrar.disabled = false;
+    nameInput.addEventListener("input", function() {
+        nameValue = nameInput.value.trim();
+        validateName();
+    });

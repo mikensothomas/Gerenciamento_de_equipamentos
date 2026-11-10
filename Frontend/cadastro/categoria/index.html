@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f2f6f5">
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="../../Assets/logotipo.png">
+    <title>Cadastro Categoria</title>
+</head>
+
+<body>
+
+    <header class="navbar">
+        <a href="../../inicio/index.html" class="logo">EquipaGO</a>
+
+        <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"
+            type="button">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="menu" id="menu">
+            <a href="../../login/index.html">Login</a>
+            <a href="../../cadastro/usuario/index.html">Cadastro Usuário</a>
+            <a href="../../cadastro/categoria/index.html" class="active">
+                Cadastrar Categoria
+            </a>
+            <a href="../../cadastro/equipamento/index.html">Cadastro Equipamento</a>
+            <a href="../../solicitacoes/index.html">Solicitações</a>
+            <a href="../../buscar/index.html">Dashboard</a>
+        </nav>
+    </header>
+
+    <main>
+        <section>
+            <h1>Cadastro de Categoria</h1>
+            <h3>EquipaGO</h3>
+        </section>
+        <form action="" class="form-container">
+            <div class="form-grid">
+                <div class="form-column">
+                    <div class="input-group">
+                        <label for="nome">Nome da categoria</label>
+                        <input id="nome" name="nome" type="text" placeholder="Digite o nome da categoria" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit" id="cadastrar-btn" disabled>
+                    Cadastrar
+                </button>
+            </div>
+        </form>
+    </main>
+    <script src="index.js"></script>
+    <script src="../../js/menu.js"></script>
+</body>
+
+</html>

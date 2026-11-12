@@ -27,6 +27,7 @@
             <a href="../cadastro/equipamento/index.html">
                 Cadastro Equipamento
             </a>
+            <a href="../cadastro/categoria/index.html">Cadastrar Categoria</a>
             <a href="../solicitacoes/index.html">Solicitações</a>
             <a href="../buscar/index.html">Dashboard</a>
         </nav>
@@ -40,14 +41,15 @@
             <label for="email">E-mail</label>
             <input id="email" name="email" type="email" placeholder="Escreva seu e-mail" autocomplete="email" required>
             <label for="senha">Senha</label>
-            <input id="senha" name="senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
-            <button type="button">Entrar</button>
+            <input id="senha" name="senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required disabled>
+            <button id="btn" type="button" disabled>Entrar</button>
         </form>
         <footer>
             <p>Esqueceu sua senha?</p>
             <a href="#">Fale com o administrador</a>
         </footer>
     </main>
+    <script src="./index.js"></script>
     <script src="../js/menu.js"></script>
 </body>
 

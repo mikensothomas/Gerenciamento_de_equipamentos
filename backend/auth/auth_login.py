@@ -9,6 +9,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel
 from sqlmodel import Session, select
 
+from entidades.models.usuario_model import UsuarioResponse
 from dependencia.depenndencia import database
 from entidades.models.token_model import RevokedToken
 
@@ -35,6 +36,7 @@ class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
     refresh_token: str
+    user: UsuarioResponse
 
 
 class RefreshTokenRequest(BaseModel):

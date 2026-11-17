@@ -19,8 +19,13 @@
             <input type="text" placeholder="Buscar equipamento...">
         </section>
         <section class="user-name">
-            <img src="../Assets/user.png" alt="nameUser">
-            <p>Mikenson Thomas</p>
+            <label for="input-foto">
+                <img id="imagem-usuario" src="../Assets/user.png" alt="Foto do usuário">
+            </label>
+
+            <input type="file" id="input-foto" accept="image/png,image/jpeg,image/webp" hidden>
+
+            <p id="nome-usuario"></p>
         </section>
     </header>
     <section class="containe-one-two">
@@ -153,6 +158,8 @@
             </div>
         </section>
     </section>
+    <script src="../auth.js"></script>
+    <script src="./index.js"></script>
 </body>
 
 </html>

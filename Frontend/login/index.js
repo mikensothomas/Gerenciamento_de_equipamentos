@@ -54,7 +54,9 @@ btn.addEventListener("click", async () => {
         }
 
         localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("refresh_token", data.refresh_token);
         localStorage.setItem("token_type", data.token_type);
+        localStorage.setItem("user", JSON.stringify(data.user))
 
         emailInput.value = "";
         senhaInput.value = "";
@@ -62,6 +64,7 @@ btn.addEventListener("click", async () => {
         validarEmail();
 
         console.log("Login realizado com sucesso:", data);
+        window.location.href ="../buscar/index.html"
 
     } catch (error) {
 

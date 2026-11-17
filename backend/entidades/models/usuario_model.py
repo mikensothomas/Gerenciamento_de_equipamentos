@@ -23,7 +23,7 @@ class Usuarios(SQLModel, table = True):
             SQLEnum(PerfilUsuarios, values_callable=lambda enum: [e.value for e in enum])
         )
     )
-    picture: str = Field(nullable=True)
+    picture: str | None = Field(default=None, nullable=True)
 
 
 class UsuarioCadastro(SQLModel):
@@ -33,3 +33,20 @@ class UsuarioCadastro(SQLModel):
     senha: str = Field(min_length=1, max_length=255)
     status_usuario: StatusUsuarios = Field(default=StatusUsuarios.ATIVO)
     perfil: PerfilUsuarios = Field(default=PerfilUsuarios.ALUNO)
+
+class UsuarioResponse(SQLModel):
+    id_usuario: int
+    cpf: str
+    nome: str
+    email: str
+    status_usuario: StatusUsuarios
+    data_cadastro: date
+    perfil: PerfilUsuarios
+    picture: str | None = None
+
+
+class Token(SQLModel):
+    access_token: str
+    token_type: str = "bearer"
+    refresh_token: str
+    user: UsuarioResponse

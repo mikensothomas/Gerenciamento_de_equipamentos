@@ -5,6 +5,11 @@ from services.password_hash import hash_password
 from sqlalchemy.exc import OperationalError, IntegrityError
 from services.password_hash import verificar_password
 from auth.auth_login import criar_token
+from pathlib import Path
+from uuid import uuid4
+
+UPLOAD_DIR = Path(__file__).resolve().parent.parent / "uploads"
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 def inserirUsuarios(usuario: UsuarioCadastro, db: Session):
     try:
@@ -147,7 +152,17 @@ def loginUsuario(email: str, senha: str, db: Session):
         return {
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "token_type": "bearer"
+            "token_type": "bearer",
+            "user": {
+                "id_usuario": usuario.id_usuario,
+                "cpf": usuario.cpf,
+                "nome": usuario.nome,
+                "email": usuario.email,
+                "status_usuario": usuario.status_usuario,
+                "data_cadastro": usuario.data_cadastro,
+                "perfil": usuario.perfil,
+                "picture": usuario.picture
+            }
         }
     
     except OperationalError as e:
@@ -155,11 +170,13 @@ def loginUsuario(email: str, senha: str, db: Session):
     except IntegrityError as e:
         raise ValueError("Verifique os dados") from e
 
-def updatPicture(db: Session, current_user: str, picture: UploadFile):
+def updatPicture(db: Session, current_user: dict, picture: UploadFile):
+
+    arquivo_salvo = None
 
     try:
         email = current_user.get("email")
-        
+
         usuario = db.exec(
             select(Usuarios).where(Usuarios.email == email)
         ).first()
@@ -167,24 +184,90 @@ def updatPicture(db: Session, current_user: str, picture: UploadFile):
         if not usuario:
             raise ValueError("Usuário não encontrado")
 
-        usuario.picture = picture
+        if not picture:
+            raise ValueError("Nenhuma imagem enviada")
+
+        # Validar formato da imagem
+        extensao = Path(picture.filename).suffix.lower()
+
+        extensoes_permitidas = [".jpg", ".jpeg", ".png", ".webp"]
+
+        if extensao not in extensoes_permitidas:
+            raise ValueError("Formato de imagem não permitido")
+
+        if picture.content_type not in [
+            "image/jpeg",
+            "image/png",
+            "image/webp"
+        ]:
+            raise ValueError("O arquivo enviado não é uma imagem válida")
+
+        # Gerar nome único para evitar arquivos com nomes duplicados
+        nome_arquivo = f"{uuid4().hex}{extensao}"
+
+        caminho_arquivo = UPLOAD_DIR / nome_arquivo
+
+        # Ler e salvar o arquivo
+        conteudo = picture.file.read()
+
+        if len(conteudo) > 5 * 1024 * 1024:
+            raise ValueError("A imagem deve ter no máximo 5 MB")
+
+        with open(caminho_arquivo, "wb") as arquivo:
+            arquivo.write(conteudo)
+
+        arquivo_salvo = caminho_arquivo
+
+        # Guardar somente o caminho no banco
+        foto_anterior = usuario.picture
+
+        usuario.picture = f"/uploads/{nome_arquivo}"
 
         db.add(usuario)
         db.commit()
         db.refresh(usuario)
 
+        # Remover foto anterior, se existir
+        if foto_anterior:
+            caminho_antigo = UPLOAD_DIR / Path(foto_anterior).name
+
+            if caminho_antigo.is_file():
+                caminho_antigo.unlink()
+
         return {
             "message": "Foto atualizada com sucesso",
-            "picture_url": f"http://127.0.0.1:8000{usuario.picture}"
+            "picture_url": usuario.picture
         }
-        
+
+    except ValueError:
+        db.rollback()
+
+        if arquivo_salvo and arquivo_salvo.exists():
+            arquivo_salvo.unlink()
+
+        raise
+
     except OperationalError as e:
         db.rollback()
-        raise RuntimeError("Falha na conexão com o banco de dados") from e
+
+        if arquivo_salvo and arquivo_salvo.exists():
+            arquivo_salvo.unlink()
+
+        raise RuntimeError(
+            "Falha na conexão com o banco de dados"
+        ) from e
+
+    except Exception:
+        db.rollback()
+
+        if arquivo_salvo and arquivo_salvo.exists():
+            arquivo_salvo.unlink()
+
+        raise
 
 def removePicture(db: Session, current_user: dict):
-    try:
 
+    try:
         email = current_user.get("email")
 
         usuario = db.exec(
@@ -193,15 +276,27 @@ def removePicture(db: Session, current_user: dict):
 
         if not usuario:
             raise ValueError("Usuário não encontrado")
+
+        if not usuario.picture:
+            raise ValueError("Usuário não possui foto cadastrada")
+
+        caminho_imagem = UPLOAD_DIR / Path(usuario.picture).name
 
         usuario.picture = None
 
         db.add(usuario)
         db.commit()
-        db.refresh(usuario)
 
-        return usuario
+        if caminho_imagem.is_file():
+            caminho_imagem.unlink()
+
+        return {
+            "message": "Foto removida com sucesso"
+        }
 
     except OperationalError as e:
         db.rollback()
-        raise RuntimeError("Falha na conexão com o banco de dados") from e
+
+        raise RuntimeError(
+            "Falha na conexão com o banco de dados"
+        ) from e

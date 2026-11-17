@@ -17,3 +17,7 @@
         nameValue = nameInput.value.trim();
         validateNameCCategory();
     });
+
+    btnCadastrar.addEventListener('click', (e) => {
+        
+    })

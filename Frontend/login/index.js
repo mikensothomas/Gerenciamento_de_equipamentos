@@ -1,4 +1,3 @@
-
 const url_api = "http://127.0.0.1:8000/user_login";
 
 const emailInput = document.getElementById("email");
@@ -53,6 +52,9 @@ btn.addEventListener("click", async () => {
         if (!response.ok) {
             throw new Error(data.detail || `Erro HTTP: ${response.status}`);
         }
+
+        localStorage.setItem("access_token", data.access_token);
+        localStorage.setItem("token_type", data.token_type);
 
         emailInput.value = "";
         senhaInput.value = "";

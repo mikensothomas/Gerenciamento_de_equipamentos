@@ -72,14 +72,12 @@
                 </div>
 
                 <div class="form-column">
-                    <div class="input-group">
-                        <label for="status">Status</label>
-                        <input id="status" name="status" type="text" placeholder="O status do equipamento">
-                    </div>
 
                     <div class="input-group">
-                        <label for="categoria">Categoria</label>
-                        <input id="categoria" name="categoria" type="text" placeholder="Digite a categoria" required>
+                        <label for="categori">Selecionar a categoria</label>
+                        <select name="categoria" id="categoria" required>
+                            <option value=""></option>
+                        </select>
                     </div>
 
                     <div class="input-group">
@@ -96,10 +94,11 @@
             </div>
 
             <div class="form-actions">
-                <button type="submit" class="btn-submit">Cadastrar</button>
+                <button id="btn-enviar" type="submit" class="btn-submit">Cadastrar</button>
             </div>
         </form>
     </main>
+    <script src="./index.js"></script>
     <script src="../../js/menu.js"></script>
 </body>
 

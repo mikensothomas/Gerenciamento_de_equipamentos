@@ -36,7 +36,7 @@ header {
     border-radius: 5px;
 }
 
-header > .logo-name {
+header>.logo-name {
     display: flex;
     flex: 0 1 auto;
     align-items: center;
@@ -44,15 +44,15 @@ header > .logo-name {
     gap: 5px;
 }
 
-header > .logo-name > img {
+header>.logo-name>img {
     width: clamp(90px, 15vw, 220px);
     max-width: 100%;
     height: auto;
     margin-right: 0;
 }
 
-header > .logo-name > p,
-header > .user-name > p {
+header>.logo-name>p,
+header>.user-name>p {
     display: inline-block;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     font-weight: 600;
@@ -62,18 +62,27 @@ header > .user-name > p {
     overflow-wrap: anywhere;
 }
 
-header > .logo-name > p {
+header>.logo-name>p {
     font-size: clamp(14px, 1.5vw, 22px);
     transform: none;
+    cursor: pointer;
 }
 
-header > .input-buscar {
+header>.logo-name>p:hover {
+    opacity: 0.7;
+}
+
+header>.logo-name>p:active {
+    opacity: 0.5;
+}
+
+header>.input-buscar {
     flex: 1 1 250px;
     min-width: 0;
     max-width: 600px;
 }
 
-header > .input-buscar > input {
+header>.input-buscar>input {
     display: block;
     width: 100%;
     max-width: 100%;
@@ -84,28 +93,77 @@ header > .input-buscar > input {
     font-size: 16px;
 }
 
-header > .user-name {
+header>.user-name {
     display: flex;
     flex: 0 1 auto;
     align-items: center;
     min-width: 0;
     gap: 12px;
     border-radius: 10px;
+    position: relative;
 }
 
-header > .user-name > p {
+header>.user-name>p {
     font-size: clamp(12px, 1.3vw, 18px);
     transform: none;
+    cursor: pointer;
 }
 
-header > .user-name > label {
+header>.user-name>p:hover {
+    opacity: 0.7;
+}
+
+header>.user-name>p:active {
+    opacity: 0.5;
+}
+
+.logout-removeImagem-atualizarImagem {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 160px;
+    padding: 12px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    z-index: 1000;
+}
+
+.logout-removeImagem-atualizarImagem a {
+    text-decoration: none;
+    color: #333333;
+    font-size: 14px;
+    padding: 8px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+}
+
+.logout-removeImagem-atualizarImagem a#logout, #remover {
+    color: rgb(222, 69, 69);
+}
+
+.logout-removeImagem-atualizarImagem a:hover {
+    background-color: #f0f0f0;
+    color: #007bff;
+}
+
+.logout-removeImagem-atualizarImagem.ativo {
+    display: flex;
+}
+
+header>.user-name>label {
     display: flex;
     align-items: center;
     flex-shrink: 0;
     cursor: pointer;
 }
 
-header > .user-name > label > img {
+header>.user-name>label>img {
     width: clamp(38px, 4vw, 60px);
     height: clamp(38px, 4vw, 60px);
     flex-shrink: 0;
@@ -116,9 +174,10 @@ header > .user-name > label > img {
     transition: transform 0.2s ease;
 }
 
-header > .user-name > label > img:hover {
+header>.user-name>label>img:hover {
     transform: scale(1.08);
 }
+
 .container-one-item a.active {
     background-color: #273242;
     color: white;

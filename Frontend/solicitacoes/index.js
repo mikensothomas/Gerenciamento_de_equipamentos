@@ -6,6 +6,15 @@ const usuario = getUsuarioLogado()
 const nomeUsuario = document.getElementById("nome-usuario")
 const imagemUsuario = document.getElementById("imagem-usuario")
 const inputFoto = document.getElementById("input-foto")
+const equipaGoClick = document.getElementById("equipa-go-click")
+const menuUsuario = document.querySelector(".logout-removeImagem-atualizarImagem")
+const logout = document.getElementById("logout")
+const remover = document.getElementById("remover")
+const atualizar = document.getElementById("atualizar")
+
+equipaGoClick.addEventListener("click", () => {
+    window.location.href = "../inicio/index.html"
+})
 
 if (!usuario) {
     nomeUsuario.textContent = "Visitante"
@@ -36,6 +45,7 @@ inputFoto.addEventListener("change", async () => {
 
     if (!accessToken) {
         alert("Faça login para atualizar sua foto.")
+        window.location.href = "../login/index.html";
         return
     }
 
@@ -67,4 +77,95 @@ inputFoto.addEventListener("change", async () => {
     } finally {
         inputFoto.value = ""
     }
+})
+
+nomeUsuario.addEventListener("click", (e) => {
+    e.stopPropagation()
+    menuUsuario.classList.toggle("ativo")
+})
+
+document.addEventListener("click", () => {
+    menuUsuario.classList.remove("ativo")
+})
+
+
+logout.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const accessToken = localStorage.getItem("access_token");
+    const refreshToken = localStorage.getItem("refresh_token");
+
+    if (!accessToken || !refreshToken) {
+        localStorage.clear();
+        window.location.href = "../login/index.html";
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/logout`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                refresh_token: refreshToken
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || `Erro HTTP: ${response.status}`);
+        }
+
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        localStorage.removeItem("token_type");
+        localStorage.removeItem("user");
+
+        window.location.href = "../login/index.html";
+
+    } catch (error) {
+        console.error("Erro:", error);
+        window.location.href = "../login/index.html";
+    }
+});
+
+remover.addEventListener("click", async (e) => {
+    e.preventDefault()
+
+    const accessToken = localStorage.getItem("access_token");
+
+    if (!accessToken) {
+        alert("Token expirado, fazer login novamente")
+        window.location.href = "../login/index.html";
+    }
+
+    try {
+        
+        const response = await fetch(`${API_URL}/remove_pictures`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        })
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || `Erro HTTP: ${response.status}`);
+        }
+
+        imagemUsuario.src = "../Assets/user.png";
+
+    } catch (error) {
+        console.error("Error:", error)
+    }
+})
+
+atualizar.addEventListener("click", (e) => {
+    e.preventDefault()
+
+    inputFoto.click()
 })

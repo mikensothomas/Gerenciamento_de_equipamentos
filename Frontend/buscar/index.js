@@ -15,6 +15,7 @@ const totalEquipa = document.getElementById("total-equipa")
 const pendente = document.getElementById("equipa-pendente")
 const manutencao = document.getElementById("equipa-manutencao")
 const ativo = document.getElementById("equipa-ativo")
+const cardEquipamento = document.getElementById("lista-equipamentos")
 
 async function listarEquipamento() {
     const accessToken = localStorage.getItem("access_token");
@@ -44,6 +45,49 @@ async function listarEquipamento() {
 
 }
 
+function obterClasseStatus(status) {
+    const situacoes = {
+        "Disponível": "disponivel",
+        "Indisponível": "indisponivel",
+        "Em manutenção": "manutencao",
+        "Em uso": "reservado"
+    };
+
+    return situacoes[status] || "status-padrao";
+}
+
+async function mostrarEquipamentos() {
+    const equipamentos = await listarEquipamento()
+
+    cardEquipamento.innerHTML = ""
+
+    equipamentos.forEach(element => {
+        const card = document.createElement("div")
+
+        const imagemUrl = element.picture
+            ? `http://localhost:8000/${element.picture.replace(/^\/+/, "")}`
+            : "../Assets/padrao.png";
+
+        card.innerHTML = `
+            <img src="${imagemUrl}" alt="${element.nome}">
+            
+            <p>${element.nome}</p>
+            
+            <p>${element.descricao}</p>
+            
+            <span class="status ${obterClasseStatus(element.status_equipamento)}">
+                ${element.status_equipamento}
+            </span>
+
+            <div class="tag-a">
+                <a href="#">Solicitar</a>
+                <a href="#">Detalhes</a>
+            </div>
+        `
+        cardEquipamento.appendChild(card)
+    });
+}
+
 async function totalEquipamentos() {
     const equipamentos = await listarEquipamento()
 
@@ -53,11 +97,11 @@ async function totalEquipamentos() {
         elemento.status_equipamento === "Disponivel"
     ).length
 
-    manutencao.textContent = equipamentos.filter(elemento => 
+    manutencao.textContent = equipamentos.filter(elemento =>
         elemento.status_equipamento === "Manutencao"
     ).length
 
-    pendente.textContent = equipamentos.filter(elemento => 
+    pendente.textContent = equipamentos.filter(elemento =>
         elemento.status_equipamento === "Reservado"
     ).length
 }
@@ -214,3 +258,4 @@ atualizar.addEventListener("click", (e) => {
 })
 
 totalEquipamentos()
+mostrarEquipamentos()

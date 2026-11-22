@@ -20,12 +20,10 @@ BASE_DIR = Path(__file__).resolve().parent
 UPLOAD_DIR = BASE_DIR / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     db.connect()
     yield
-
 
 app = FastAPI(
     title="My FastAPI Application",

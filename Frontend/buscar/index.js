@@ -17,6 +17,37 @@ const manutencao = document.getElementById("equipa-manutencao")
 const ativo = document.getElementById("equipa-ativo")
 const cardEquipamento = document.getElementById("lista-equipamentos")
 
+const detalhesOverlay = document.getElementById("detalhes-equipamento");
+const fecharDetalhes = document.getElementById("fechar-detalhes");
+
+fecharDetalhes.addEventListener("click", () => {
+    detalhesOverlay.classList.remove("ativo");
+});
+
+detalhesOverlay.addEventListener("click", (e) => {
+    if (e.target === detalhesOverlay) {
+        detalhesOverlay.classList.remove("ativo");
+    }
+});
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+        detalhesOverlay.classList.remove("ativo");
+    }
+});
+
+
+function obterClasseStatus(status) {
+    const situacoes = {
+        "Disponivel": "disponivel",
+        "Indisponivel": "indisponivel",
+        "Manutencao": "manutencao",
+        "Reservado": "reservado"
+    };
+
+    return situacoes[status] || "status-padrao";
+}
+
 async function listarEquipamento() {
     const accessToken = localStorage.getItem("access_token");
 
@@ -45,17 +76,6 @@ async function listarEquipamento() {
 
 }
 
-function obterClasseStatus(status) {
-    const situacoes = {
-        "Disponível": "disponivel",
-        "Indisponível": "indisponivel",
-        "Em manutenção": "manutencao",
-        "Em uso": "reservado"
-    };
-
-    return situacoes[status] || "status-padrao";
-}
-
 async function mostrarEquipamentos() {
     const equipamentos = await listarEquipamento()
 
@@ -81,10 +101,15 @@ async function mostrarEquipamentos() {
 
             <div class="tag-a">
                 <a href="#">Solicitar</a>
-                <a href="#">Detalhes</a>
+                <a href="#" class="btn-detalhes">Detalhes</a>
             </div>
         `
         cardEquipamento.appendChild(card)
+
+        card.querySelector(".btn-detalhes").addEventListener("click", (e) => {
+            e.preventDefault();
+            mostrarDetalhes(element);
+        });
     });
 }
 
@@ -256,6 +281,20 @@ atualizar.addEventListener("click", (e) => {
 
     inputFoto.click()
 })
+
+function mostrarDetalhes(element) {
+    document.getElementById("detalhe-id").textContent = element.equipamento_id;
+    document.getElementById("detalhe-nome").textContent = element.nome;
+    document.getElementById("detalhe-patrimonio").textContent = element.patrimonio;
+    document.getElementById("detalhe-marca").textContent = element.marca;
+    document.getElementById("detalhe-modelo").textContent = element.modelo;
+    document.getElementById("detalhe-descricao").textContent = element.descricao;
+    document.getElementById("detalhe-status").textContent = element.status_equipamento;
+    document.getElementById("detalhe-categoria").textContent = element.equipamento_categoria_id;
+    document.getElementById("detalhe-quantidade").textContent = element.quantidade;
+
+    document.getElementById("detalhes-equipamento").classList.add("ativo");
+}
 
 totalEquipamentos()
 mostrarEquipamentos()

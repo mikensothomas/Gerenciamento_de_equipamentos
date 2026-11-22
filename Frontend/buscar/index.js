@@ -11,6 +11,56 @@ const logout = document.getElementById("logout")
 const atualizar = document.getElementById("atualizar")
 const remover = document.getElementById("remover")
 const menuUser = document.querySelector(".logout-removeImagem-atualizarImagem")
+const totalEquipa = document.getElementById("total-equipa")
+const pendente = document.getElementById("equipa-pendente")
+const manutencao = document.getElementById("equipa-manutencao")
+const ativo = document.getElementById("equipa-ativo")
+
+async function listarEquipamento() {
+    const accessToken = localStorage.getItem("access_token");
+
+    try {
+        const response = await fetch(`${API_URL}/listarEquipamento`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${accessToken}`
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error("Erro ao listar equipamento")
+        }
+
+        const data = await response.json()
+
+        console.log(data)
+
+        return data
+
+    } catch (error) {
+        console.error("Error: ", error)
+        return []
+    }
+
+}
+
+async function totalEquipamentos() {
+    const equipamentos = await listarEquipamento()
+
+    totalEquipa.textContent = equipamentos.length;
+
+    ativo.textContent = equipamentos.filter(elemento =>
+        elemento.status_equipamento === "Disponivel"
+    ).length
+
+    manutencao.textContent = equipamentos.filter(elemento => 
+        elemento.status_equipamento === "Manutencao"
+    ).length
+
+    pendente.textContent = equipamentos.filter(elemento => 
+        elemento.status_equipamento === "Reservado"
+    ).length
+}
 
 equipaGoClick.addEventListener("click", (e) => {
     e.preventDefault()
@@ -162,3 +212,5 @@ atualizar.addEventListener("click", (e) => {
 
     inputFoto.click()
 })
+
+totalEquipamentos()

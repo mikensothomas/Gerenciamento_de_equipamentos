@@ -81,7 +81,7 @@ def deletarEquipamentos(id: int, db: Session = Depends(database.get_session), _:
             detail=str(e)
         )
 
-@equipamento_router.get("/listarEquipamneto")
+@equipamento_router.get("/listarEquipamento")
 def listarEquipamentos(db: Session = Depends(database.get_session),
     _: dict = Depends(validar_token)
 ):

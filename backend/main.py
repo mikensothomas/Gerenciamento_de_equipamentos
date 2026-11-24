@@ -12,6 +12,7 @@ from routes import (
     usuario_routes,
     equipamento_routes,
     solicitacao_routas,
+    perfil_routes
 )
 
 db = Database()
@@ -65,3 +66,5 @@ app.include_router(categoria_routes.categoriaEquipamentoRouter)
 app.include_router(usuario_routes.usaurioRoutes)
 app.include_router(equipamento_routes.equipamento_router)
 app.include_router(solicitacao_routas.solicitacao_router)
+
+app.include_router(perfil_routes.router)
